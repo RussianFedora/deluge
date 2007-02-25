@@ -1,32 +1,29 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.4.1
-Release:	6%{?dist}
+Version:	0.4.90.2
+Release:	1%{?dist}
 Summary:	A Python BitTorrent client with support for UPnP and DHT
 Group:		Applications/Editors
 License:	GPL
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
-Source1:	%{name}.desktop
-Source2:	COPYING
+Patch0:		%{name}-setup.py-build-against-system-libtorrent.patch
+
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch:	noarch
 
 BuildRequires:	desktop-file-utils
+BuildRequires:	python-devel
+BuildRequires:	rb_libtorrent-devel
 
 Requires:	/bin/sh
 Requires:	pyxdg
-Requires:	python-libtorrent >= 0.3.0-4
-Requires:	gnome-python2-libegg
+Requires:	rb_libtorrent
 Requires:	pygtk2-libglade
-Requires:	PyXML
-
-%if 0%{?fedora} >= 6
-Requires:	notify-python
-%endif
+Requires:	dbus-python
 
 %description
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
@@ -39,35 +36,28 @@ zero configuration of port-forwarding.
 
 %prep
 %setup -q
+%patch0 -b .use-system-libtorrent
 
 
 %build
-## Nothing to build...
+CFLAGS="%{optflags}" %{__python} setup.py build
 
 
 %install
 rm -rf %{buildroot}
-## Copy the necessary files...
-install -p -m 0755 -d %{buildroot}%{python_sitelib}/%{name}/
-install -p -m 0755 -t %{buildroot}%{python_sitelib}/%{name}/ *.py
-cp -pr glade plugins pixmaps %{buildroot}%{python_sitelib}/%{name}/
-install -p -D -m 0644 pixmaps/%{name}-256.png	\
-	%{buildroot}%{_datadir}/pixmaps/%{name}.png 
-install -p -m 0644 %{SOURCE2} ./COPYING
-
-## ...Create the wrapper script...
-echo -e '#!/bin/sh\ncd %{python_sitelib}/%{name} && exec python ./deluge.py' > %{name}-wrapper.sh 
-install -D -m 0755 %{name}-wrapper.sh %{buildroot}%{_bindir}/%{name}
-
-## ...then strip the unneeded shebang lines from the plugins...
-for FILE in %{buildroot}/%{python_sitelib}/%{name}/plugins/*.py; do
-	sed -i 1d ${FILE};
-done  
-
-## ...Then install the .desktop file.
+%{__python} setup.py install -O1 --skip-build --root %{buildroot}
 desktop-file-install --vendor fedora	\
 	--dir %{buildroot}%{_datadir}/applications	\
-	%{SOURCE1}
+	--copy-name-to-generic-name	\
+	--add-mime-type=application/x-bittorrent	\
+	--delete-original	\
+	%{buildroot}%{_datadir}/applications/%{name}.desktop
+## ...then strip the unneeded shebang lines from some of the plugins...
+pushd %{buildroot}/%{python_sitearch}/%{name}/
+	for FILE in delugegtk.py delugeplugins.py; do
+		sed -i 1d ${FILE};
+	done
+popd 
 
 
 %clean
@@ -76,13 +66,10 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-## No LICENSE or COPYING text available in the source tarball, though each
-## source file has a header GPL comment block. I've submitted a bug report to
-## the upstream developers about this; and they will include such a file in
-## the next release of Deluge.
-%doc COPYING
-%{python_sitelib}/%{name}/
-%{_datadir}/pixmaps/%{name}.png
+%doc LICENSE 
+%{python_sitearch}/%{name}/
+%{_datadir}/%{name}/
+%{_datadir}/pixmaps/%{name}.xpm
 %{_datadir}/applications/fedora-%{name}.desktop
 %{_bindir}/%{name}
 
@@ -96,6 +83,13 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Sat Feb 24 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.90.2-1
+- Update to new upstream release (0.5 Beta 2)
+- Add patch to force building against system copy of rb_libtorrent:
+  + setup.py-build-against-system-libtorrent.patch
+- Remove python-libtorrent and a few other dependencies that are no longer
+  uses.
+
 * Fri Feb 23 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.1-6
 - Fix Source0 URL.
 
