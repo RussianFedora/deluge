@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.4.90.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A Python BitTorrent client with support for UPnP and DHT
 Group:		Applications/Editors
 License:	GPL
@@ -11,7 +11,7 @@ URL:		http://deluge-torrent.org/
 
 Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 Patch0:		%{name}-setup.py-build-against-system-libtorrent.patch
-
+Patch1:		%{name}-64bit-python_long.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -37,6 +37,7 @@ zero configuration of port-forwarding.
 %prep
 %setup -q
 %patch0 -b .use-system-libtorrent
+%patch1 -b .64bit-python_long
 
 
 %build
@@ -83,12 +84,16 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Sun Feb 25 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.90.2-2
+- Add patch to fix 64-bit python_long type.
+  +  64bit-python_long.patch
+
 * Sat Feb 24 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.90.2-1
 - Update to new upstream release (0.5 Beta 2)
 - Add patch to force building against system copy of rb_libtorrent:
   + setup.py-build-against-system-libtorrent.patch
 - Remove python-libtorrent and a few other dependencies that are no longer
-  uses.
+  used.
 
 * Fri Feb 23 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.1-6
 - Fix Source0 URL.

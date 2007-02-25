@@ -1,0 +1,23 @@
+--- src/deluge_core.cpp.old	2007-02-25 10:42:20.000000000 -0800
++++ src/deluge_core.cpp	2007-02-25 10:46:12.000000000 -0800
+@@ -32,6 +32,7 @@
+ 
+ #include <boost/filesystem/exception.hpp>
+ #include <boost/filesystem/operations.hpp>
++#include <inttypes.h>
+ 
+ #include "libtorrent/entry.hpp"
+ #include "libtorrent/bencode.hpp"
+@@ -49,11 +50,7 @@
+ // CONSTANTS
+ //-----------------
+ 
+-#ifdef AMD64
+-#define python_long int
+-#else
+-#define python_long long
+-#endif
++#define python_long int64_t
+ 
+ #define EVENT_NULL            				0
+ #define EVENT_FINISHED        				1
