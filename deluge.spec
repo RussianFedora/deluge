@@ -2,8 +2,8 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.4.90.2
-Release:	2%{?dist}
+Version:	0.4.90.3
+Release:	1%{?dist}
 Summary:	A Python BitTorrent client with support for UPnP and DHT
 Group:		Applications/Editors
 License:	GPL
@@ -12,6 +12,7 @@ URL:		http://deluge-torrent.org/
 Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 Patch0:		%{name}-setup.py-build-against-system-libtorrent.patch
 Patch1:		%{name}-64bit-python_long.patch
+Patch2:		%{name}-setup.py-dont-store-the-install-dir.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -38,9 +39,13 @@ zero configuration of port-forwarding.
 %setup -q
 %patch0 -b .use-system-libtorrent
 %patch1 -b .64bit-python_long
+%patch2 -b .dont-store-the-install-dir
 
 
 %build
+## We forcibly don't store the installation directory during the build, so
+## we need to ensure that it is properly inserted into the code as required.
+%{__sed} -i -e "s:INSTALL_PREFIX = '@datadir@':INSTALL_PREFIX = '%{_usr}':" src/dcommon.py
 CFLAGS="%{optflags}" %{__python} setup.py build
 
 
@@ -84,6 +89,12 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Fri Mar 02 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.90.3-1
+- Update to new upstream release (0.5 Beta 3).
+- Add patch to fix storing of installation directory:
+  + setup.py-dont-store-the-install-dir.patch
+    (to be applied after setup.py-build-against-system-libtorrent.patch)
+
 * Sun Feb 25 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.90.2-2
 - Add patch to fix 64-bit python_long type.
   +  64bit-python_long.patch
