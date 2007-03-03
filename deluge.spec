@@ -45,7 +45,8 @@ zero configuration of port-forwarding.
 %build
 ## We forcibly don't store the installation directory during the build, so
 ## we need to ensure that it is properly inserted into the code as required.
-%{__sed} -i -e "s:INSTALL_PREFIX = '@datadir@':INSTALL_PREFIX = '%{_usr}':" src/dcommon.py
+%{__sed} -i -e "s:INSTALL_PREFIX = '@datadir@':INSTALL_PREFIX = '%{_usr}':" \
+	src/dcommon.py
 CFLAGS="%{optflags}" %{__python} setup.py build
 
 
