@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.4.99.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A Python BitTorrent client with support for UPnP and DHT
 Group:		Applications/Editors
 License:	GPL
@@ -36,7 +36,6 @@ zero configuration of port-forwarding.
 
 %prep
 %setup -q
-%patch0 -p0 -b .64bit-python_long
 install -m 0755 %{SOURCE1} ./setup.py
 
 
@@ -45,7 +44,11 @@ install -m 0755 %{SOURCE1} ./setup.py
 ## we need to ensure that it is properly inserted into the code as required.
 %{__sed} -i -e "s:INSTALL_PREFIX = '@datadir@':INSTALL_PREFIX = '%{_usr}':" \
 	src/dcommon.py
-CFLAGS="%{optflags}" %{__python} setup.py build
+%ifarch x86_64 ppc64 sparc64
+	CFLAGS="%{optflags} -DAMD64" %{__python} setup.py build
+%else
+	CFLAGS="%{optflags}" %{__python} setup.py build
+%endif
 
 
 %install
@@ -89,6 +92,13 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Wed Mar 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.99.1-2
+- Drop unneeded 64bit-python_long patch; as it seems to cause more trouble than
+  it's worth. Instead, pass -DAMD64 as a compiler flag on 64-bit arches.
+  - 64bit-python_long patch
+  (This should fix the bug where, even though torrents are active, they are not
+  shown in the GtkTreeView listing.)
+
 * Tue Mar 06 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.99.1-1
 - Update to new upstream release (0.5 RC1).
 - Use rewritten setup.py instead of patching it so much, since it's easier to
