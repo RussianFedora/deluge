@@ -11,7 +11,6 @@ URL:		http://deluge-torrent.org/
 
 Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 Source1:	%{name}-fixed-setup.py
-Patch0:		%{name}-64bit-python_long.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
