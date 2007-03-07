@@ -2,7 +2,7 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.4.90.3
+Version:	0.4.99.1
 Release:	1%{?dist}
 Summary:	A Python BitTorrent client with support for UPnP and DHT
 Group:		Applications/Editors
@@ -10,9 +10,8 @@ License:	GPL
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
-Patch0:		%{name}-setup.py-build-against-system-libtorrent.patch
-Patch1:		%{name}-64bit-python_long.patch
-Patch2:		%{name}-setup.py-dont-store-the-install-dir.patch
+Source1:	%{name}-fixed-setup.py
+Patch0:		%{name}-64bit-python_long.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -37,9 +36,8 @@ zero configuration of port-forwarding.
 
 %prep
 %setup -q
-%patch0 -b .use-system-libtorrent
-%patch1 -b .64bit-python_long
-%patch2 -b .dont-store-the-install-dir
+%patch0 -p0 -b .64bit-python_long
+install -m 0755 %{SOURCE1} ./setup.py
 
 
 %build
@@ -65,13 +63,14 @@ pushd %{buildroot}/%{python_sitearch}/%{name}/
 		sed -i 1d ${FILE};
 	done
 popd 
+%find_lang %{name}
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc LICENSE 
 %{python_sitearch}/%{name}/
@@ -90,6 +89,15 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Tue Mar 06 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.99.1-1
+- Update to new upstream release (0.5 RC1).
+- Use rewritten setup.py instead of patching it so much, since it's easier to
+  maintain across version upgrades and whatnot:
+  + fixed-setup.py
+- Remove the setup.py patches (no longer needed, since I'm packaging my own):
+  - setup.py-dont-store-the-install-dir.patch
+  - setup.py-build-against-system-libtorrent.patch
+
 * Fri Mar 02 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.90.3-1
 - Update to new upstream release (0.5 Beta 3).
 - Add patch to fix storing of installation directory:
