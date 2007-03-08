@@ -11,6 +11,7 @@ URL:		http://deluge-torrent.org/
 
 Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 Source1:	%{name}-fixed-setup.py
+Patch0:		%{name}-delugegtk.py-fix-IndexError-exception-handling.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -35,6 +36,7 @@ zero configuration of port-forwarding.
 
 %prep
 %setup -q
+%patch0 -p0 -b .delugegtk.py-fix-IndexError-exception-handling
 install -m 0755 %{SOURCE1} ./setup.py
 
 
@@ -91,6 +93,13 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Wed Mar 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.99.1-3
+- Add a patch (submitted upstream) to properly catch a thrown IndexError in
+  state message updates. This should resolve the bug wherein the UI stops
+  updating its details and torrent listing.
+  + delugegtk.py-fix-IndexError-exception-handling.patch
+  
+
 * Wed Mar 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.99.1-2
 - Drop unneeded 64bit-python_long patch; as it seems to cause more trouble than
   it's worth. Instead, pass -DAMD64 as a compiler flag on 64-bit arches.
