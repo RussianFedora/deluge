@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.4.99.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A Python BitTorrent client with support for UPnP and DHT
 Group:		Applications/Editors
 License:	GPL
