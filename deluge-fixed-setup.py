@@ -33,7 +33,7 @@ import msgfmt
 
 pythonVersion = platform.python_version()[0:3]
 
-APP_VERSION = "0.4.99.1"
+APP_VERSION = "0.4.99.2"
 
 additions = ['-DNDEBUG', '-O2']
 

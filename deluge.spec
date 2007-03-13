@@ -2,8 +2,8 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.4.99.1
-Release:	3%{?dist}
+Version:	0.4.99.2
+Release:	1%{?dist}
 Summary:	A Python BitTorrent client with support for UPnP and DHT
 Group:		Applications/Editors
 License:	GPL
@@ -11,13 +11,13 @@ URL:		http://deluge-torrent.org/
 
 Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 Source1:	%{name}-fixed-setup.py
-Patch0:		%{name}-delugegtk.py-fix-IndexError-exception-handling.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	desktop-file-utils
 BuildRequires:	python-devel
 BuildRequires:	rb_libtorrent-devel
+BuildRequires:	libtool
 
 Requires:	/bin/sh
 Requires:	pyxdg
@@ -36,7 +36,6 @@ zero configuration of port-forwarding.
 
 %prep
 %setup -q
-%patch0 -p0 -b .delugegtk.py-fix-IndexError-exception-handling
 install -m 0755 %{SOURCE1} ./setup.py
 
 
@@ -93,13 +92,19 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Mon Mar 12 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.99.2-1
+- Update to new upstream release (0.5 RC2).
+- Drop IndexError exception-handling fix (applied upstream):
+  - delugegtk.py-fix-IndexError-exception-handling.patch
+- Use the system libtool instead of the one from the sources to ensure
+  that no unnecessary RPATH hacks are added to the final build. 
+
 * Wed Mar 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.99.1-3
 - Add a patch (submitted upstream) to properly catch a thrown IndexError in
   state message updates. This should resolve the bug wherein the UI stops
   updating its details and torrent listing.
   + delugegtk.py-fix-IndexError-exception-handling.patch
   
-
 * Wed Mar 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.99.1-2
 - Drop unneeded 64bit-python_long patch; as it seems to cause more trouble than
   it's worth. Instead, pass -DAMD64 as a compiler flag on 64-bit arches.
