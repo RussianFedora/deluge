@@ -2,7 +2,7 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.4.99.2
+Version:	0.5.0
 Release:	1%{?dist}
 Summary:	A Python BitTorrent client with support for UPnP and DHT
 Group:		Applications/Editors
@@ -92,6 +92,9 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Mon Mar 12 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.0-1
+- Update to new upstream release (0.5.0).
+
 * Mon Mar 12 2007 Peter Gordon <peter@thecodergeek.com> - 0.4.99.2-1
 - Update to new upstream release (0.5 RC2).
 - Drop IndexError exception-handling fix (applied upstream):

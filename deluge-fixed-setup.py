@@ -33,7 +33,14 @@ import msgfmt
 
 pythonVersion = platform.python_version()[0:3]
 
-APP_VERSION = "0.4.99.2"
+NAME		= "deluge"
+FULLNAME	= "Deluge BitTorrent Client"
+VERSION		= "0.5.0"
+AUTHOR		= "Zach Tibbitts, Alon Zakai"
+EMAIL		= "zach@collegegeek.org, kripkensteiner@gmail.com"
+DESCRIPTION	= "A bittorrent client written in PyGTK"
+URL		= "http://deluge-torrent.org"
+LICENSE		= "GPLv2"
 
 additions = ['-DNDEBUG', '-O2']
 
@@ -116,12 +123,9 @@ data = [('share/deluge/glade',  glob.glob('glade/*.glade')),
 for plugin in glob.glob('plugins/*'):
 	data.append( ('share/deluge/' + plugin, glob.glob(plugin + '/*')) )
 
-setup(name="deluge", fullname="Deluge BitTorrent Client", version=APP_VERSION,
-	author="Zach Tibbitts, Alon Zakai",
-	author_email="zach@collegegeek.org, kripkensteiner@gmail.com",
-	description="A bittorrent client written in PyGTK",
-	url="http://deluge-torrent.org",
-	license="GPLv2",
+setup(name=NAME, fullname=FULLNAME, version=VERSION,
+	author=AUTHOR, author_email=EMAIL, description=DESCRIPTION,
+	url=URL, license=LICENSE,
 	scripts=["scripts/deluge"],
 	packages=['deluge'],
 	package_dir = {'deluge': 'src'},
