@@ -91,7 +91,6 @@ update-desktop-database &>/dev/null ||:
 update-desktop-database &> /dev/null ||:
 
 
-
 %changelog
 * Mon Mar 12 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.0-1
 - Update to new upstream release (0.5.0).
