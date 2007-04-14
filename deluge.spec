@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.5.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A Python BitTorrent client with support for UPnP and DHT
 Group:		Applications/Editors
 License:	GPL
@@ -24,6 +24,13 @@ Requires:	pyxdg
 Requires:	rb_libtorrent
 Requires:	pygtk2-libglade
 Requires:	dbus-python
+
+## The python-libtorrent bindings were produced by the same upstream authors
+## as Deluge, and Deluge 0.4.x is the only package that depended on it
+## (according to repoquery). Thus, it is safe to make Deluge the upgrade path
+## of the python-libtorrent package since it is no longer needed (or in fact,
+## even developed) as of the 0.5 series. 
+Obsoletes:	python-libtorrent < 0.5
 
 %description
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
@@ -92,6 +99,9 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Sun Apr 08 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.0-2
+- Make Deluge the upgrade path of the now-orphaned python-libtorrent package.
+  
 * Mon Mar 12 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.0-1
 - Update to new upstream release (0.5.0).
 
