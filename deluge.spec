@@ -1,29 +1,44 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.0
-Release:	2%{?dist}
-Summary:	A Python BitTorrent client with support for UPnP and DHT
-Group:		Applications/Editors
+Version:	0.5.2
+Release:	1%{?dist}
+Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX.
+Group:		Applications/Internet
 License:	GPL
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
-Source1:	%{name}-fixed-setup.py
+## Not used for now: Deluge builds against its own internal copy of
+## rb_libtorrent. See below for more details. 
+# Source1:	%{name}-fixed-setup.py
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires:	boost-devel
 BuildRequires:	desktop-file-utils
-BuildRequires:	python-devel
-BuildRequires:	rb_libtorrent-devel
 BuildRequires:	libtool
+BuildRequires:	openssl-devel
+BuildRequires:	python-devel
+## Not used for now: Deluge builds against its own internal copy of
+## rb_libtorrent. See below for more details. 
+# BuildRequires:	rb_libtorrent-devel
 
 Requires:	/bin/sh
-Requires:	pyxdg
-Requires:	rb_libtorrent
-Requires:	pygtk2-libglade
 Requires:	dbus-python
+Requires:	pygtk2-libglade
+Requires:	pyxdg
+## Deluge is now using its own internal copy of rb_libtorrent, which they have
+## heavily modified. Patches were sent to the upstream rb_libtorrent devs,
+## and Deluge frequently re-syncs with the upstream rb_libtorrent codebase.
+## Their reason for this is that there is no rasterbar-libtorrent package in
+## neither Debian nor its derivatives such as Ubuntu, so they do this to make
+## make it simpler to package...on Debian. @_@
+## However, as of this time, it does not build against a system copy of 0.12
+## or a 0.13 nightly snapshot, so this is the only way to make this software
+## functional. (See also: README.Packagers in the root of the source tarball.)
+# Requires:	rb_libtorrent
 
 ## The python-libtorrent bindings were produced by the same upstream authors
 ## as Deluge, and Deluge 0.4.x is the only package that depended on it
@@ -36,21 +51,18 @@ Obsoletes:	python-libtorrent < 0.5
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
 intended to bring a native, full-featured client to Linux GTK+ desktop
 environments such as GNOME and XFCE. It supports features such as DHT
-(Distributed Hash Tables) and UPnP (Universal Plug-n-Play) that allow one to
-more easily share BitTorrent data even from behind a router with virtually
-zero configuration of port-forwarding.
+(Distributed Hash Tables), PEX (µTorrent-compatible Peer Exchange), and UPnP
+(Universal Plug-n-Play) that allow one to more easily share BitTorrent data
+even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %prep
 %setup -q
-install -m 0755 %{SOURCE1} ./setup.py
+## Not building against system rb_libtorrent - see above.
+# install -m 0755 %{SOURCE1} ./setup.py
 
 
 %build
-## We forcibly don't store the installation directory during the build, so
-## we need to ensure that it is properly inserted into the code as required.
-%{__sed} -i -e "s:INSTALL_PREFIX = '@datadir@':INSTALL_PREFIX = '%{_usr}':" \
-	src/dcommon.py
 %ifarch x86_64 ppc64 sparc64
 	CFLAGS="%{optflags} -DAMD64" %{__python} setup.py build
 %else
@@ -67,12 +79,6 @@ desktop-file-install --vendor fedora	\
 	--add-mime-type=application/x-bittorrent	\
 	--delete-original	\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
-## ...then strip the unneeded shebang lines from some of the plugins...
-pushd %{buildroot}/%{python_sitearch}/%{name}/
-	for FILE in delugegtk.py delugeplugins.py; do
-		sed -i 1d ${FILE};
-	done
-popd 
 %find_lang %{name}
 
 
@@ -99,6 +105,14 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Sun Jul 08 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.2-1
+- Update to new upstream release (0.5.2)
+- Update Summary and %%description to reflect new µTorrent-compatible Peer
+  Exchange ("PEX") functionality.
+
+* Thu Jun 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.0.90.2-2
+- Update to new upstream release (0.5.1 Beta 2)
+
 * Sun Apr 08 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.0-2
 - Make Deluge the upgrade path of the now-orphaned python-libtorrent package.
   
