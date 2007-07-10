@@ -16,8 +16,10 @@ Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires:	boost-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	libtool
+BuildRequires:	openssl-devel
 BuildRequires:	python-devel
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
@@ -49,9 +51,9 @@ Obsoletes:	python-libtorrent < 0.5
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
 intended to bring a native, full-featured client to Linux GTK+ desktop
 environments such as GNOME and XFCE. It supports features such as DHT
-(Distributed Hash Tables) and UPnP (Universal Plug-n-Play) that allow one to
-more easily share BitTorrent data even from behind a router with virtually
-zero configuration of port-forwarding.
+(Distributed Hash Tables), PEX (µTorrent-compatible Peer Exchange), and UPnP
+(Universal Plug-n-Play) that allow one to more easily share BitTorrent data
+even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %prep
@@ -105,8 +107,8 @@ update-desktop-database &> /dev/null ||:
 %changelog
 * Sun Jul 08 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.2-1
 - Update to new upstream release (0.5.2)
-- Update description to reflect new µTorrent-compatible Peer Exchange ("PEX")
-  capability.
+- Update Summary and %%description to reflect new µTorrent-compatible Peer
+  Exchange ("PEX") functionality.
 
 * Thu Jun 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.0.90.2-2
 - Update to new upstream release (0.5.1 Beta 2)
