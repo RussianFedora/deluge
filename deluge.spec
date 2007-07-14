@@ -1,9 +1,9 @@
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+	%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
 Version:	0.5.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX.
 Group:		Applications/Internet
 License:	GPL
@@ -13,6 +13,7 @@ Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
+Patch0:		%{name}-fix-persistence-upgrade-rhbz_247927.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -60,6 +61,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 %setup -q
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
+%patch0 -p0 -b .fix-persistence-upgrade-rhbz_247927
 
 
 %build
@@ -105,6 +107,12 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Wed Jul 11 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.2-2
+- Add patch to fix the existence of stale persistence files by automatically
+  updating the deluge.deluge module name to deluge.core, or removing them if
+  empty (bug 247927):
+    + fix-persistence-upgrade-rhbz_247927.patch
+
 * Sun Jul 08 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.2-1
 - Update to new upstream release (0.5.2)
 - Update Summary and %%description to reflect new µTorrent-compatible Peer
