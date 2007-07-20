@@ -64,7 +64,8 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 %build
 ## FIXME: This should really use %%{?_smp_mflags} or similar for parallel
-## compilations; but the build system on this doesn't 
+## compilations; but the build system on this doesn't support such flags at
+## this time.
 %ifarch x86_64 ppc64 sparc64
 	CFLAGS="%{optflags} -DAMD64" %{__python} setup.py build
 %else
