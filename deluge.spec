@@ -2,9 +2,9 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.2.90
+Version:	0.5.3
 Release:	1%{?dist}
-Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX.
+Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPL
 URL:		http://deluge-torrent.org/           
@@ -66,21 +66,18 @@ even from behind a router with virtually zero configuration of port-forwarding.
 ## FIXME: This should really use %%{?_smp_mflags} or similar for parallel
 ## compilations; but the build system on this doesn't support such flags at
 ## this time.
-%ifarch x86_64 ppc64 sparc64
-	CFLAGS="%{optflags} -DAMD64" %{__python} setup.py build
-%else
-	CFLAGS="%{optflags}" %{__python} setup.py build
-%endif
+CFLAGS="%{optflags}" %{__python} setup.py build
 
 
 %install
 rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
-desktop-file-install --vendor fedora	\
+desktop-file-install --vendor fedora			\
 	--dir %{buildroot}%{_datadir}/applications	\
-	--copy-name-to-generic-name	\
+	--copy-name-to-generic-name			\
 	--add-mime-type=application/x-bittorrent	\
-	--delete-original	\
+	--delete-original				\
+	--remove-category=Application			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
 %find_lang %{name}
 
@@ -108,6 +105,11 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Fri Jul 20 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.3-1
+- Update to new upstream release candidate (0.5.3)
+- Drop %%ifarch invocations for 64-bit builds. The internal setup script now
+  properly determines this and adds the AMD64 compiler definition if necessary.
+
 * Fri Jul 20 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.2.90-1
 - Update to new upstream release candidate (0.5.3 RC1)
 - Drop stale persistence fix patch (applied upstream):
