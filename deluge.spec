@@ -105,7 +105,7 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
-* Fri Jul 20 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.3-1
+* Wed Jul 25 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.3-1
 - Update to new upstream release candidate (0.5.3)
 - Drop %%ifarch invocations for 64-bit builds. The internal setup script now
   properly determines this and adds the AMD64 compiler definition if necessary.
