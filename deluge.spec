@@ -2,9 +2,9 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.2
-Release:	2%{?dist}
-Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX.
+Version:	0.5.3
+Release:	1%{?dist}
+Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPL
 URL:		http://deluge-torrent.org/           
@@ -13,7 +13,6 @@ Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
-Patch0:		%{name}-fix-persistence-upgrade-rhbz_247927.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -61,25 +60,24 @@ even from behind a router with virtually zero configuration of port-forwarding.
 %setup -q
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
-%patch0 -p0 -b .fix-persistence-upgrade-rhbz_247927
 
 
 %build
-%ifarch x86_64 ppc64 sparc64
-	CFLAGS="%{optflags} -DAMD64" %{__python} setup.py build
-%else
-	CFLAGS="%{optflags}" %{__python} setup.py build
-%endif
+## FIXME: This should really use %%{?_smp_mflags} or similar for parallel
+## compilations; but the build system on this doesn't support such flags at
+## this time.
+CFLAGS="%{optflags}" %{__python} setup.py build
 
 
 %install
 rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
-desktop-file-install --vendor fedora	\
+desktop-file-install --vendor fedora			\
 	--dir %{buildroot}%{_datadir}/applications	\
-	--copy-name-to-generic-name	\
+	--copy-name-to-generic-name			\
 	--add-mime-type=application/x-bittorrent	\
-	--delete-original	\
+	--delete-original				\
+	--remove-category=Application			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
 %find_lang %{name}
 
@@ -93,7 +91,7 @@ rm -rf %{buildroot}
 %doc LICENSE 
 %{python_sitearch}/%{name}/
 %{_datadir}/%{name}/
-%{_datadir}/pixmaps/%{name}.xpm
+%{_datadir}/pixmaps/%{name}.png
 %{_datadir}/applications/fedora-%{name}.desktop
 %{_bindir}/%{name}
 
@@ -107,11 +105,18 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Fri Jul 20 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.3-1
+- Update to new upstream release candidate (0.5.3)
+- Drop %%ifarch invocations for 64-bit builds. The internal setup script now
+  properly determines this and adds the AMD64 compiler definition if necessary.
+- Drop stale persistence fix patch (applied upstream):
+  - fix-persistence-upgrade-rhbz_247927.patch
+
 * Wed Jul 11 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.2-2
 - Add patch to fix the existence of stale persistence files by automatically
   updating the deluge.deluge module name to deluge.core, or removing them if
   empty (bug 247927):
-    + fix-persistence-upgrade-rhbz_247927.patch
+  + fix-persistence-upgrade-rhbz_247927.patch
 
 * Sun Jul 08 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.2-1
 - Update to new upstream release (0.5.2)
