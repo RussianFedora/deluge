@@ -3,10 +3,10 @@
 
 Name:		deluge
 Version:	0.5.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
-License:	GPL
+License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
@@ -105,6 +105,10 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Fri Aug 03 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.3-2
+- Update License tag (GPLv2+).
+- Rebuild against new Boost libraries.
+
 * Wed Jul 25 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.3-1
 - Update to new upstream release candidate (0.5.3)
 - Drop %%ifarch invocations for 64-bit builds. The internal setup script now
