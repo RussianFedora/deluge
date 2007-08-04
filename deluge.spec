@@ -14,6 +14,8 @@ Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
 
+Patch0:		%{name}-use-mt-boost.patch
+
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	boost-devel
@@ -60,6 +62,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 %setup -q
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
+%patch0 -b .use-mt-boost
 
 
 %build
@@ -107,7 +110,9 @@ update-desktop-database &> /dev/null ||:
 %changelog
 * Fri Aug 03 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.3-2
 - Update License tag (GPLv2+).
-- Rebuild against new Boost libraries.
+- Rebuild against new Boost libraries, adding a patch to build against the
+  multi-threaded ("*-mt") libraries:
+  + use-mt-boost.patch
 
 * Wed Jul 25 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.3-1
 - Update to new upstream release candidate (0.5.3)
