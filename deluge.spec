@@ -2,8 +2,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.3
-Release:	2%{?dist}
+Version:	0.5.4.1
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -13,7 +13,6 @@ Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
-
 Patch0:		%{name}-use-mt-boost.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -108,6 +107,13 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Mon Aug 13 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.4.1-1
+- Update to new upstream release (0.5.4.1)
+- Build with new binutils to gain BuildID debugging goodness.
+
+* Mon Aug 06 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.4-1
+- Update to new upstream release (0.5.4)
+
 * Fri Aug 03 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.3-2
 - Update License tag (GPLv2+).
 - Rebuild against new Boost libraries, adding a patch to build against the
