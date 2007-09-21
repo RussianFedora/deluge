@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.5.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -13,6 +13,7 @@ Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
+Patch0: 	%{name}-default-prefs-no-release-notifications.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -60,6 +61,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 %setup -q
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
+%patch0 -b .default-prefs-no-release-notifications
 
 
 %build
@@ -105,7 +107,13 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
-* Wed Sep 12 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.5
+* Thu Sep 20 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.5-2
+- Fix release on previous %%changelog entry.
+- Disable the version update notifications by default:
+  + default-prefs-no-release-notifications.patch
+  (Resolves bug 299601: Deluge alerts of new versions)
+
+* Wed Sep 12 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.5-1
 - Update to new upstream release (0.5.5)
 
 * Mon Sep 03 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.4.1.95-1
