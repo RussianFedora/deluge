@@ -2,17 +2,18 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.6.2
+Version:	0.5.6.96
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://deluge-torrent.org/downloads/%{name}-%{version}.tar.gz
+Source0:	http://download.deluge-torrent.org/tarball/%{version}/%{name}-%{version}.tar.gz
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
+
 Patch0: 	%{name}-default-prefs-no-release-notifications.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -29,6 +30,7 @@ BuildRequires:	python-devel
 Requires:	/bin/sh
 Requires:	dbus-python
 Requires:	pygtk2-libglade
+Requires:	pyOpenSSL
 Requires:	pyxdg
 ## Deluge is now using its own internal copy of rb_libtorrent, which they have
 ## heavily modified. Patches were sent to the upstream rb_libtorrent devs,
@@ -107,6 +109,10 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Sat Nov 24 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.6.96-1
+- Update to new upstream release candidate (0.5.7 RC2)
+- Update Source0 url
+
 * Wed Oct 31 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.6.2-1
 - Update to new upstream bug-fix release (0.5.6.2)
 
