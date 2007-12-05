@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.5.7
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -109,6 +109,9 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Wed Dec 05 2007 Release Engineering <rel-eng at fedoraproject dot org> - 0.5.7-2
+ - Rebuild for deps
+
 * Tue Nov 24 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.6.96-1
 - Update to new upstream release (0.5.7)
 
