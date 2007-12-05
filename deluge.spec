@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.5.7
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -76,6 +76,8 @@ CFLAGS="%{optflags}" %{__python} setup.py build
 %install
 rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
+## Fix the Icon name in the .desktop file: it shouldn't contain an extension.
+sed -i -e 's/Icon=deluge.png/Icon=deluge/' %{buildroot}%{_datadir}/applications/%{name}.desktop
 desktop-file-install --vendor fedora			\
 	--dir %{buildroot}%{_datadir}/applications	\
 	--copy-name-to-generic-name			\
@@ -109,10 +111,15 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
-* Wed Dec 05 2007 Release Engineering <rel-eng at fedoraproject dot org> - 0.5.7-2
- - Rebuild for deps
+* Wed Dec 05 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.7-3
+- Fix previous %%changelog Version.
+- Cleanup the installed .desktop file. Fixes bug 413101 (deluge fails to build
+  in rawhide  bad .desktop file.)
 
-* Tue Nov 24 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.6.96-1
+* Wed Dec 05 2007 Release Engineering <rel-eng at fedoraproject dot org> - 0.5.7-2
+- Rebuild for deps
+
+* Tue Nov 24 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.7-1
 - Update to new upstream release (0.5.7)
 
 * Sat Nov 24 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.6.96-1
