@@ -2,8 +2,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.7
-Release:	3%{?dist}
+Version:	0.5.7.1
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -29,6 +29,8 @@ BuildRequires:	python-devel
 
 Requires:	/bin/sh
 Requires:	dbus-python
+## Required for the proper ownership of icon dirs.
+Requires:	hicolor-icon-theme
 Requires:	pygtk2-libglade
 Requires:	pyOpenSSL
 Requires:	pyxdg
@@ -60,7 +62,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %prep
-%setup -q
+%setup -qn "deluge-torrent-%{version}"
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
 %patch1 -b .default-prefs-no-release-notifications
@@ -96,10 +98,11 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc LICENSE 
 %{python_sitearch}/%{name}/
-%{_datadir}/%{name}/
-%{_datadir}/pixmaps/%{name}.png
-%{_datadir}/applications/fedora-%{name}.desktop
 %{_bindir}/%{name}
+%{_datadir}/%{name}/
+%{_datadir}/applications/fedora-%{name}.desktop
+%{_datadir}/pixmaps/%{name}.png
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 
 %post
@@ -111,6 +114,10 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Fri Dec 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.7.1-1
+- Update to new upstream bug-fix release (0.5.7.1).
+- Sort %%files list (aesthetic-only change).
+
 * Wed Dec 05 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.7-3
 - Fix previous %%changelog Version.
 - Cleanup the installed .desktop file. Fixes bug 413101 (deluge fails to build
