@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.5.7.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -107,13 +107,24 @@ rm -rf %{buildroot}
 
 %post
 update-desktop-database &>/dev/null ||:
+touch --no-create %{_datadir}/icons/hicolor
+if [ -x %{_bindir}/gtk-update-icon-cache ]; then
+	%{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor ||:
+fi
 
 
 %postun
 update-desktop-database &> /dev/null ||:
+touch --no-create %{_datadir}/icons/hicolor
+if [ -x %{_bindir}/gtk-update-icon-cache ]; then
+	%{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor ||:
+fi
 
 
 %changelog
+* Sun Dec 09 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.7.1-2
+- Add missing icon cache %%post and %%postun scriptlets.
+
 * Fri Dec 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.7.1-1
 - Update to new upstream bug-fix release (0.5.7.1).
 - Sort %%files list (aesthetic-only change).
