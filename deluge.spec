@@ -98,12 +98,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc LICENSE 
 %{python_sitearch}/%{name}/
+%{python_sitearch}/%{name}-%{version}-py2.5.egg-info
 %{_bindir}/%{name}
 %{_datadir}/%{name}/
 %{_datadir}/applications/fedora-%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-
 
 %post
 update-desktop-database &>/dev/null ||:
@@ -124,6 +124,7 @@ fi
 %changelog
 * Sun Dec 09 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.7.1-2
 - Add missing icon cache %%post and %%postun scriptlets.
+- Add missing egg-info to the %%files list.
 
 * Fri Dec 07 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.7.1-1
 - Update to new upstream bug-fix release (0.5.7.1).
