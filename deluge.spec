@@ -105,10 +105,18 @@ rm -rf %{buildroot}
 
 %post
 update-desktop-database &>/dev/null ||:
+touch --no-create %{_datadir}/icons/hicolor
+if [ -x %{_bindir}/gtk-update-icon-cache ]; then
+	%{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor ||:
+fi
 
 
 %postun
 update-desktop-database &> /dev/null ||:
+touch --no-create %{_datadir}/icons/hicolor
+if [ -x %{_bindir}/gtk-update-icon-cache ]; then
+	%{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor ||:
+fi
 
 
 %changelog
