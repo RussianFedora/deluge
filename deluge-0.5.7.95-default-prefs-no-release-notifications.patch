@@ -1,0 +1,10 @@
+--- deluge-torrent-0.5.7.95/src/common.py.notify	2007-12-23 08:35:28.000000000 +0900
++++ deluge-torrent-0.5.7.95/src/common.py	2007-12-24 21:37:02.000000000 +0900
+@@ -236,6 +236,7 @@
+     Send_Info_Thread().start()
+ 
+ def new_release_check():
++    return True
+     import threading
+     class ReleaseThread(threading.Thread):
+        def __init__(self):
