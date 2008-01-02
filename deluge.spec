@@ -2,8 +2,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.7.1
-Release:	2%{?dist}
+Version:	0.5.8
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -14,8 +14,7 @@ Source0:	http://download.deluge-torrent.org/tarball/%{version}/%{name}-%{version
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
 
-#Patch1: 	%{name}-default-prefs-no-release-notifications.patch
-Patch1:		deluge-0.5.7.1-default-prefs-no-release-notifications.patch
+Patch1: 	%{name}-default-prefs-no-release-notifications.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -66,8 +65,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 %setup -qn "deluge-torrent-%{version}"
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
-#%%patch1 -b .default-prefs-no-release-notifications
-%patch1 -p1 -b .release-notify
+%patch1 -b .default-prefs-no-release-notifications
 
 
 %build
@@ -122,6 +120,11 @@ fi
 
 
 %changelog
+* Tue Jan 01 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.8-1
+- Update to new upstream release (0.5.8)
+- Merge Mamoru Tasaka's no-release-notification patch into the default-prefs
+  patch.
+  
 * Mon Dec 24 2007 Mamoru Tasaka <mtasaka@ioa.s.u-tokyo.ac.jp> - 0.5.7.1-2
 - Completely suppress updates notification (bug 299601, 426642)
 
