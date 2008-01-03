@@ -120,7 +120,7 @@ fi
 
 
 %changelog
-* Wed Jan 02 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.8-1
+* Wed Jan 02 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.8-2
 - Update to new upstream release (0.5.8)
 - Merge Mamoru Tasaka's no-release-notification patch into the default-prefs
   patch.
