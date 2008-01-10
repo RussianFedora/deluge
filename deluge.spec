@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.5.8
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -29,6 +29,7 @@ BuildRequires:	python-devel
 
 Requires:	/bin/sh
 Requires:	dbus-python
+Requires:	dbus-x11
 ## Required for the proper ownership of icon dirs.
 Requires:	hicolor-icon-theme
 Requires:	pygtk2-libglade
@@ -105,6 +106,7 @@ rm -rf %{buildroot}
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
+
 %post
 update-desktop-database &>/dev/null ||:
 touch --no-create %{_datadir}/icons/hicolor
@@ -122,6 +124,11 @@ fi
 
 
 %changelog
+* Wed Jan 09 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.8-3
+- Add runtime dependency on dbus-x11 for the dbus-launch utility. Fixes bug
+  428106 (Missing BR dbus-x11).
+- Bump release to 3 to maintain a proper F8->F9+ upgrade path.
+
 * Mon Dec 31 2007 Peter Gordon <peter@thecodergeek.com> - 0.5.8-1
 - Update to new upstream release (0.5.8)
 - Merge Mamoru Tasaka's no-release-notification patch into the default-prefs
