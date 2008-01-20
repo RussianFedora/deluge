@@ -2,8 +2,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.8
-Release:	3%{?dist}
+Version:	0.5.8.1
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -124,6 +124,9 @@ fi
 
 
 %changelog
+* Sat Jan 19 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.8.1-1
+- Update to new upstream bugfix release (0.5.8.1)
+
 * Wed Jan 09 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.8-3
 - Add runtime dependency on dbus-x11 for the dbus-launch utility. Fixes bug
   428106 (Missing BR dbus-x11).
