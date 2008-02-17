@@ -124,7 +124,7 @@ fi
 
 
 %changelog
-* Tue Feb 12 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.8.4-1
+* Sat Feb 16 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.8.4-1
 - Update to new upstream release (0.5.8.4)
 - Rebuild for GCC 4.3
 
