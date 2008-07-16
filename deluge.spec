@@ -2,17 +2,19 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.9.3
+Version:	0.9.02
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/tarball/%{version}/%{name}-%{version}.tar.gz
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.gz
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
+
+Patch0: 	%{name}-use-mt-boost.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -21,6 +23,7 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	libtool
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
+BuildRequires:	python-setuptools
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # BuildRequires:	rb_libtorrent-devel
@@ -44,13 +47,6 @@ Requires:	pyxdg
 ## functional. (See also: README.Packagers in the root of the source tarball.)
 # Requires:	rb_libtorrent
 
-## The python-libtorrent bindings were produced by the same upstream authors
-## as Deluge, and Deluge 0.4.x is the only package that depended on it
-## (according to repoquery). Thus, it is safe to make Deluge the upgrade path
-## of the python-libtorrent package since it is no longer needed (or in fact,
-## even developed) as of the 0.5 series. 
-Obsoletes:	python-libtorrent < 0.5
-
 %description
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
 intended to bring a native, full-featured client to Linux GTK+ desktop
@@ -61,16 +57,25 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %prep
-%setup -qn "deluge-torrent-%{version}"
+%setup -q
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
+%patch0 -b .use-mt-boost
 
 
 %build
+## Per upstream's recommendation: the blocklist plugin is nothing but Epic
+## Fail and should not be included in the package. (A rewrite of it is under
+## development currently.)
+rm -rf deluge/plugins/blocklist
+
 ## FIXME: This should really use %%{?_smp_mflags} or similar for parallel
 ## compilations; but the build system on this doesn't support such flags at
 ## this time.
 CFLAGS="%{optflags}" %{__python} setup.py build
+
+## Finally, make the state_upgrade script executable...
+chmod a+x deluge/scripts/state_upgrade.py
 
 
 %install
@@ -85,23 +90,23 @@ desktop-file-install --vendor fedora			\
 	--delete-original				\
 	--remove-category=Application			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
-%find_lang %{name}
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%files -f %{name}.lang
+%files
 %defattr(-,root,root,-)
-%doc LICENSE 
+%doc ChangeLog deluge/scripts/state_upgrade.py deluge/ui/webui/LICENSE TODO
 %{python_sitearch}/%{name}/
 %{python_sitearch}/%{name}-%{version}-py2.5.egg-info
 %{_bindir}/%{name}
-%{_datadir}/%{name}/
+%{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_datadir}/icons/scalable/apps/%{name}.svg
 
 
 %post
@@ -121,6 +126,14 @@ fi
 
 
 %changelog
+* Tue Jul 15 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.02-1
+- Update to new upstream release candidate (1.0.0 RC2)
+- Force building against the multithreaded Boost libs.
+  + use-mt-boost.patch
+- Remove python-libtorrent Obsoletes. (It's been dead for 3 releases now; and
+  is just clutter.)
+- Remove the blocklist plugin, at upstream's recommendation.
+
 * Tue Jun 24 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.9.3-1
 - Update to new upstream release (0.5.9.3)
 
