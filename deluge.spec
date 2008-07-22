@@ -2,7 +2,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.9.02
+Version:	0.9.03
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -64,11 +64,6 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %build
-## Per upstream's recommendation: the blocklist plugin is nothing but Epic
-## Fail and should not be included in the package. (A rewrite of it is under
-## development currently.)
-rm -rf deluge/plugins/blocklist
-
 ## FIXME: This should really use %%{?_smp_mflags} or similar for parallel
 ## compilations; but the build system on this doesn't support such flags at
 ## this time.
@@ -98,7 +93,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog deluge/scripts/state_upgrade.py deluge/ui/webui/LICENSE TODO
+%doc ChangeLog deluge/scripts/state_upgrade.py deluge/ui/webui/LICENSE
+%doc deluge/ui/webui/TODO
 %{python_sitearch}/%{name}/
 %{python_sitearch}/%{name}-%{version}-py2.5.egg-info
 %{_bindir}/%{name}
@@ -126,6 +122,11 @@ fi
 
 
 %changelog
+* Mon Jul 21 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.03-1
+- Update to new upstream release candidate (1.0.0 RC3)
+- Re-add the blocklist plugin, at upstream's suggestion. (The rewrite is
+  complete.)
+
 * Tue Jul 15 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.02-1
 - Update to new upstream release candidate (1.0.0 RC2)
 - Force building against the multithreaded Boost libs.
