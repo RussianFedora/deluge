@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	0.9.03
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -35,6 +35,7 @@ Requires:	dbus-x11
 Requires:	hicolor-icon-theme
 Requires:	pygtk2-libglade
 Requires:	pyOpenSSL
+Requires:	python-setuptools
 Requires:	pyxdg
 ## Deluge is now using its own internal copy of rb_libtorrent, which they have
 ## heavily modified. Patches were sent to the upstream rb_libtorrent devs,
@@ -122,6 +123,10 @@ fi
 
 
 %changelog
+* Wed Jul 23 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.03-2
+- Add setuptools runtime dependency, to fix "No module named pkg_resources"
+  error messages.
+
 * Mon Jul 21 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.03-1
 - Update to new upstream release candidate (1.0.0 RC3)
 - Re-add the blocklist plugin, at upstream's suggestion. (The rewrite is
