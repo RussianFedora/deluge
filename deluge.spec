@@ -2,8 +2,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.9.03
-Release:	2%{?dist}
+Version:	0.9.04
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -123,6 +123,9 @@ fi
 
 
 %changelog
+* Fri Aug 01 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.04-1
+- Update to new upstream release candidate (1.0.0 RC4)
+
 * Wed Jul 23 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.03-2
 - Add setuptools runtime dependency, to fix "No module named pkg_resources"
   error messages.
