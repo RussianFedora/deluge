@@ -2,14 +2,14 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.9.04
+Version:	0.9.07
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.gz
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
@@ -77,8 +77,6 @@ chmod a+x deluge/scripts/state_upgrade.py
 %install
 rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
-## Fix the Icon name in the .desktop file: it shouldn't contain an extension.
-sed -i -e 's/Icon=deluge.png/Icon=deluge/' %{buildroot}%{_datadir}/applications/%{name}.desktop
 desktop-file-install --vendor fedora			\
 	--dir %{buildroot}%{_datadir}/applications	\
 	--copy-name-to-generic-name			\
@@ -123,6 +121,14 @@ fi
 
 
 %changelog
+* Wed Aug 13 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.06-1
+- Update to new upstream release candidate (1.0.0 RC7)
+- Drop desktop file icon name hack (fixed upstream).
+
+* Wed Aug 13 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.06-1
+- Update to new upstream release candidate (1.0.0 RC6)
+- Drop desktop file icon name hack (fixed upstream).
+
 * Fri Aug 01 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.04-1
 - Update to new upstream release candidate (1.0.0 RC4)
 
