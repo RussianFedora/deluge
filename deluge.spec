@@ -2,7 +2,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.9.07
+Version:	0.9.08
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -70,9 +70,6 @@ even from behind a router with virtually zero configuration of port-forwarding.
 ## this time.
 CFLAGS="%{optflags}" %{__python} setup.py build
 
-## Finally, make the state_upgrade script executable...
-chmod a+x deluge/scripts/state_upgrade.py
-
 
 %install
 rm -rf %{buildroot}
@@ -92,8 +89,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog deluge/scripts/state_upgrade.py deluge/ui/webui/LICENSE
-%doc deluge/ui/webui/TODO
+%doc deluge/ui/webui/LICENSE deluge/ui/webui/TODO
 %{python_sitearch}/%{name}/
 %{python_sitearch}/%{name}-%{version}-py2.5.egg-info
 %{_bindir}/%{name}
@@ -121,7 +117,13 @@ fi
 
 
 %changelog
-* Wed Aug 13 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.06-1
+* Sun Sep 07 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.08-1
+- Update to new upstream release candidate (1.0.0 RC8)
+- Drop state_upgrade script from the documentation. (This is now handled
+  automatically.)
+- Fix version in previous %%changelog entry.
+
+* Wed Aug 13 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.07-1
 - Update to new upstream release candidate (1.0.0 RC7)
 - Drop desktop file icon name hack (fixed upstream).
 
