@@ -1,0 +1,24 @@
+--- deluge-1.0.0/setup.py.debug	2008-09-22 04:22:24.000000000 +0900
++++ deluge-1.0.0/setup.py	2008-09-26 22:44:27.000000000 +0900
+@@ -145,8 +145,20 @@
+         ]
+ 
+     # Modify the libs if necessary for systems with only -mt boost libs    
++    #
++    # See rh#250802, boost threads lib does not have "single thread" variant,
++    # so here the existence of libboost_thread.so must be checked.
++    #
++    # Also the directory where libraries are installed should be able
++    # to be specified
++    #
++    libdir = os.path.join(sysconfig.PREFIX, "lib")
++    _libdir = sysconfig.get_config_vars()["LIBDIR"]
++    if _libdir:
++        libdir = _libdir
++
+     if not os.path.exists(
+-        os.path.join(sysconfig.PREFIX, "lib", "libboost_filesystem.so")):
++        os.path.join(libdir, "libboost_thread.so")):
+         # It's likely that this system doesn't have symlinks setup
+         # So add '-mt' to the libraries
+         for lib in _libraries:

@@ -14,6 +14,8 @@ Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
 
+Patch0: 	%{name}-mt-boost-fix.patch
+
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	boost-devel
@@ -59,6 +61,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 %setup -q
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
+%patch0 -p1 -b .mt-boost-fix
 
 
 %build
@@ -114,8 +117,12 @@ fi
 
 
 %changelog
-* Mon Sep 22 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.0-1
+* Sat Sep 27 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.0-1
 - Update to new upstream release (1.0.0 Final)
+- Apply patch from Mamoru Tasaka to build against the multi-threaded Boost
+  libraries once more:
+  + mt-boost-fix.patch
+- Resolves: #464151 (About 1.0.0 build failure)
 
 * Tue Sep 16 2008 Peter Gordon <peter@thecodergeek.com> - 0.9.09-1
 - Update to new upstream release candidate (1.0.0 RC9)
