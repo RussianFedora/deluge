@@ -2,7 +2,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.0.0
+Version:	1.0.2
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -13,8 +13,6 @@ Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
-
-Patch0: 	%{name}-mt-boost-fix.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -61,7 +59,6 @@ even from behind a router with virtually zero configuration of port-forwarding.
 %setup -q
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
-%patch0 -p1 -b .mt-boost-fix
 
 
 %build
@@ -117,6 +114,11 @@ fi
 
 
 %changelog
+* Sun Oct 12 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.2-1
+- Update to new upstream release (1.0.2)
+- Drop multithreaded boost compilation patch (fixed upstream, again).
+  - mt-boost-fix.patch
+  
 * Sat Sep 27 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.0-1
 - Update to new upstream release (1.0.0 Final)
 - Apply patch from Mamoru Tasaka to build against the multi-threaded Boost
