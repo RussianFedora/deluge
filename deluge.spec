@@ -2,7 +2,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.0.2
+Version:	1.0.3
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -114,6 +114,9 @@ fi
 
 
 %changelog
+* Fri Oct 24 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.3-1
+- Update to new upstream release (1.0.3)
+
 * Sun Oct 12 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.2-1
 - Update to new upstream release (1.0.2)
 - Drop multithreaded boost compilation patch (fixed upstream, again).
