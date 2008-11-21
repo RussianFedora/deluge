@@ -2,14 +2,14 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	0.5.9.3
+Version:	1.0.5
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/tarball/%{version}/%{name}-%{version}.tar.gz
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
@@ -21,6 +21,7 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	libtool
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
+BuildRequires:	python-setuptools
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # BuildRequires:	rb_libtorrent-devel
@@ -32,6 +33,7 @@ Requires:	dbus-x11
 Requires:	hicolor-icon-theme
 Requires:	pygtk2-libglade
 Requires:	pyOpenSSL
+Requires:	python-setuptools
 Requires:	pyxdg
 ## Deluge is now using its own internal copy of rb_libtorrent, which they have
 ## heavily modified. Patches were sent to the upstream rb_libtorrent devs,
@@ -61,7 +63,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %prep
-%setup -qn "deluge-torrent-%{version}"
+%setup -q
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
 
@@ -76,8 +78,6 @@ CFLAGS="%{optflags}" %{__python} setup.py build
 %install
 rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
-## Fix the Icon name in the .desktop file: it shouldn't contain an extension.
-sed -i -e 's/Icon=deluge.png/Icon=deluge/' %{buildroot}%{_datadir}/applications/%{name}.desktop
 desktop-file-install --vendor fedora			\
 	--dir %{buildroot}%{_datadir}/applications	\
 	--copy-name-to-generic-name			\
@@ -85,23 +85,23 @@ desktop-file-install --vendor fedora			\
 	--delete-original				\
 	--remove-category=Application			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
-%find_lang %{name}
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%files -f %{name}.lang
+%files
 %defattr(-,root,root,-)
-%doc LICENSE 
+%doc deluge/ui/webui/LICENSE deluge/ui/webui/TODO
 %{python_sitearch}/%{name}/
 %{python_sitearch}/%{name}-%{version}-py2.5.egg-info
 %{_bindir}/%{name}
-%{_datadir}/%{name}/
+%{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_datadir}/icons/scalable/apps/%{name}.svg
 
 
 %post
@@ -121,6 +121,12 @@ fi
 
 
 %changelog
+* Thu Nov 13 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.5-1
+- Update to new upstream release (1.0.5)
+- Drop desktop file icon name hack (fixed upstream).
+- Add setuptools runtime dependency, to fix "No module named pkg_resources"
+  error messages.
+
 * Tue Jun 24 2008 Peter Gordon <peter@thecodergeek.com> - 0.5.9.3-1
 - Update to new upstream release (0.5.9.3)
 
