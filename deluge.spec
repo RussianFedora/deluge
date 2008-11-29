@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	1.0.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -114,6 +114,9 @@ fi
 
 
 %changelog
+* Sat Nov 29 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 1.0.5-2
+- Rebuild for Python 2.6
+
 * Thu Nov 13 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.5-1
 - Update to new upstream release (1.0.5)
 
