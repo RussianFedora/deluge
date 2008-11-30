@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	1.0.5
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -88,7 +88,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc deluge/ui/webui/LICENSE deluge/ui/webui/TODO
 %{python_sitearch}/%{name}/
-%{python_sitearch}/%{name}-%{version}-py2.5.egg-info
+%{python_sitearch}/%{name}-%{version}-py?.?.egg-info
 %{_bindir}/%{name}
 %{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
@@ -114,6 +114,9 @@ fi
 
 
 %changelog
+* Sat Nov 29 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 1.0.5-3
+- Fix locations for Python 2.6
+
 * Sat Nov 29 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 1.0.5-2
 - Rebuild for Python 2.6
 
