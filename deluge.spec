@@ -2,11 +2,13 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.0.5
+Version:	1.0.6
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
-License:	GPLv2+
+## Images in deluge/ui/webui/static/images/tango are CC-BY-SA 2.5, everything
+## else is GPLv2+.
+License:	GPLv2+ and CC-BY-SA
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
@@ -78,23 +80,51 @@ desktop-file-install --vendor fedora			\
 	--delete-original				\
 	--remove-category=Application			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
+## TODO: The lang files should REEEAALLLY be in a standard place such as
+##       /usr/share/locale or similar. It'd make things so much nicer for
+##       the packaging. :O
+## A bit of sed magic to mark the translation files with %%lang, taken from
+## find-lang.sh (part of the rpm-build package) and tweaked somewhat. We
+## cannot (unfortunately) call find-lang directly since it's not on a
+## "$PREFIX/share/locale/"-ish directory tree.
+pushd %{buildroot}
+	find -type f -o -type l \
+		| sed '
+			s:%{buildroot}%{python_sitearch}::
+			s:^\.::
+			s:\(.*/deluge/i18n/\)\([^/_]\+\)\(.*\.mo$\):%lang(\2) \1\2\3:
+			s:^\([^%].*\)::
+			s:%lang(C) ::
+			/^$/d' \
+	> %{name}.filelist
+## We've got the .mo files now; but we need the rest of the files in those
+## dirs. We can't just glob in the %%files, as that would add duplicate
+## entries for the .mo files which we've already marked with appropriate
+## %%lang-fu. 
+	find ./%{python_sitearch}/deluge -not -iname '%{name}.mo' -type f \
+		| sed 's:^\./::' >> %{name}.filelist
+	find ./%{python_sitearch}/deluge -not -iname '%{name}.mo' -type d \
+		| sed 's:^\./:%%dir :' >> %{name}.filelist	
+## Now we move that list back to our sources, so that '%%files -f' can find it
+## properly.
+popd && mv %{buildroot}/%{name}.filelist .
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%files
+%files -f %{name}.filelist
 %defattr(-,root,root,-)
-%doc deluge/ui/webui/LICENSE deluge/ui/webui/TODO
-%{python_sitearch}/%{name}/
-%{python_sitearch}/%{name}-%{version}-py2.5.egg-info
+%doc ChangeLog
+%{python_sitearch}/%{name}-%{version}-py?.?.egg-info
 %{_bindir}/%{name}
 %{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
-%{_datadir}/pixmaps/%{name}.png
+%{_datadir}/pixmaps/%{name}.*
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/scalable/apps/%{name}.svg
+%{_mandir}/man?/%{name}*
 
 
 %post
@@ -114,6 +144,11 @@ fi
 
 
 %changelog
+* Mon Dec 01 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.6-1
+- Update to new upstream release (1.0.6)
+- Adds Tango images to the WebUI data (CC-BY-SA) and some man pages.
+- Properly mark translation files with %%lang.
+
 * Thu Nov 13 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.5-1
 - Update to new upstream release (1.0.5)
 
