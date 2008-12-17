@@ -2,13 +2,11 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.0.6
+Version:	1.0.7
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
-## Images in deluge/ui/webui/static/images/tango are CC-BY-SA 2.5, everything
-## else is GPLv2+.
-License:	GPLv2+ and CC-BY-SA
+License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
@@ -144,6 +142,10 @@ fi
 
 
 %changelog
+* Tue Dec 16 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.7-1
+- Update to new upstream bug-fix release (1.0.7)
+- Remove CC-BY-SA license (the Tango WebUI images have been replaced by upstream).
+
 * Mon Dec 01 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.6-1
 - Update to new upstream release (1.0.6)
 - Adds Tango images to the WebUI data (CC-BY-SA) and some man pages.
