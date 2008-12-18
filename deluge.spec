@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	1.0.7
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -142,6 +142,9 @@ fi
 
 
 %changelog
+* Thu Dec 18 2008 Petr Machata <pmachata@redhat.com> - 1.0.7-2
+- Rebuild for new boost.
+
 * Tue Dec 16 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.7-1
 - Update to new upstream bug-fix release (1.0.7)
 - Remove CC-BY-SA license (the Tango WebUI images have been replaced by upstream).
