@@ -2,14 +2,14 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.0.7
-Release:	2%{?dist}
+Version:	1.1.0
+Release:	0.1.rc2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-1.1.0_RC2.tar.bz2
 ## Not used for now: Deluge builds against its own internal copy of
 ## rb_libtorrent. See below for more details. 
 # Source1:	%{name}-fixed-setup.py
@@ -56,7 +56,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %prep
-%setup -q
+%setup -qn "%{name}-1.1.0_RC2"
 ## Not building against system rb_libtorrent - see above.
 # install -m 0755 %{SOURCE1} ./setup.py
 
@@ -115,7 +115,7 @@ rm -rf %{buildroot}
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
 %doc ChangeLog
-%{python_sitearch}/%{name}-%{version}-py?.?.egg-info
+%{python_sitearch}/%{name}-1.1.0_RC2-py?.?.egg-info
 %{_bindir}/%{name}
 %{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
@@ -142,6 +142,9 @@ fi
 
 
 %changelog
+* Mon Dec 29 2008 Peter Gordon <peter@thecodergeek.com> - 1.1.0-0.1.rc2
+- Update to new upstream release candidate (1.1.0 RC2)
+
 * Thu Dec 18 2008 Petr Machata <pmachata@redhat.com> - 1.0.7-2
 - Rebuild for new boost.
 
