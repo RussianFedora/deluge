@@ -1,20 +1,22 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
+## Since we're using a system copy of rb_libtorrent, we need to ensure that it
+## is a very recent version for proper API matching.
+%define	min_rblibtorrent_ver	0.14.1
+
 Name:		deluge
 Version:	1.1.0
-Release:	0.1.rc2%{?dist}
+Release:	0.2.rc3%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-1.1.0_RC2.tar.bz2
-## Not used for now: Deluge builds against its own internal copy of
-## rb_libtorrent. See below for more details. 
-# Source1:	%{name}-fixed-setup.py
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-1.1.0_RC3.tar.bz2
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:	noarch
 
 BuildRequires:	boost-devel
 BuildRequires:	desktop-file-utils
@@ -22,9 +24,9 @@ BuildRequires:	libtool
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
 BuildRequires:	python-setuptools
-## Not used for now: Deluge builds against its own internal copy of
-## rb_libtorrent. See below for more details. 
-# BuildRequires:	rb_libtorrent-devel
+## The build script checks for the libtorrent module and skips compiling the
+## in-tarball one if this is found.
+BuildRequires:	rb_libtorrent-python >= %{min_rblibtorrent_ver}
 
 Requires:	/bin/sh
 Requires:	dbus-python
@@ -35,16 +37,7 @@ Requires:	pygtk2-libglade
 Requires:	pyOpenSSL
 Requires:	python-setuptools
 Requires:	pyxdg
-## Deluge is now using its own internal copy of rb_libtorrent, which they have
-## heavily modified. Patches were sent to the upstream rb_libtorrent devs,
-## and Deluge frequently re-syncs with the upstream rb_libtorrent codebase.
-## Their reason for this is that there is no rasterbar-libtorrent package in
-## neither Debian nor its derivatives such as Ubuntu, so they do this to make
-## make it simpler to package...on Debian. @_@
-## However, as of this time, it does not build against a system copy of 0.12
-## or a 0.13 nightly snapshot, so this is the only way to make this software
-## functional. (See also: README.Packagers in the root of the source tarball.)
-# Requires:	rb_libtorrent
+Requires:	rb_libtorrent-python >= %{min_rblibtorrent_ver}
 
 %description
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
@@ -56,9 +49,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %prep
-%setup -qn "%{name}-1.1.0_RC2"
-## Not building against system rb_libtorrent - see above.
-# install -m 0755 %{SOURCE1} ./setup.py
+%setup -qn "%{name}-1.1.0_RC3"
 
 
 %build
@@ -88,7 +79,7 @@ desktop-file-install --vendor fedora			\
 pushd %{buildroot}
 	find -type f -o -type l \
 		| sed '
-			s:%{buildroot}%{python_sitearch}::
+			s:%{buildroot}%{python_sitelib}::
 			s:^\.::
 			s:\(.*/deluge/i18n/\)\([^/_]\+\)\(.*\.mo$\):%lang(\2) \1\2\3:
 			s:^\([^%].*\)::
@@ -99,9 +90,9 @@ pushd %{buildroot}
 ## dirs. We can't just glob in the %%files, as that would add duplicate
 ## entries for the .mo files which we've already marked with appropriate
 ## %%lang-fu. 
-	find ./%{python_sitearch}/deluge -not -iname '%{name}.mo' -type f \
+	find ./%{python_sitelib}/deluge -not -iname '%{name}.mo' -type f \
 		| sed 's:^\./::' >> %{name}.filelist
-	find ./%{python_sitearch}/deluge -not -iname '%{name}.mo' -type d \
+	find ./%{python_sitelib}/deluge -not -iname '%{name}.mo' -type d \
 		| sed 's:^\./:%%dir :' >> %{name}.filelist	
 ## Now we move that list back to our sources, so that '%%files -f' can find it
 ## properly.
@@ -115,7 +106,7 @@ rm -rf %{buildroot}
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
 %doc ChangeLog
-%{python_sitearch}/%{name}-1.1.0_RC2-py?.?.egg-info
+%{python_sitelib}/%{name}-1.1.0_RC3-py?.?.egg-info/
 %{_bindir}/%{name}
 %{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
@@ -142,6 +133,15 @@ fi
 
 
 %changelog
+* Thu Jan 06 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.0-0.2.rc3
+- Update to new upstream release candidate (1.1.0 RC3)
+- Build against the system rb_libtorrent instead of using the in-tarball copy
+  (requires rb_libtorrent 0.14+), and adjust dependencies accordingly. Drop
+  the hacked setup.py script formerly used to enable this (fixed upstream):
+  - fixed-setup.py
+- Make it a noarch package now that it's just python scripts and related
+  data files (translations, images, etc.)
+
 * Mon Dec 29 2008 Peter Gordon <peter@thecodergeek.com> - 1.1.0-0.1.rc2
 - Update to new upstream release candidate (1.1.0 RC2)
 
