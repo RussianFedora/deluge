@@ -1,0 +1,27 @@
+If the torrent has no tracker, the call to inet_aton will fail because the
+hostname is empty. This causes torrents to not be shown, or to be shown with
+an error status.  Replacing this parameter with host ensures that this is no
+longer the case. (From upstream changeset 4492.)
+
+Index: /branches/1.1.0_RC/deluge/core/torrent.py
+===================================================================
+--- /branches/1.1.0_RC/deluge/core/torrent.py (revision 4488)
++++ /branches/1.1.0_RC/deluge/core/torrent.py (revision 4492)
+@@ -523,5 +523,5 @@
+                 import socket
+                 try:
+-                    socket.inet_aton(url.hostname)
++                    socket.inet_aton(host)
+                 except socket.error:
+                     pass
+Index: /branches/1.1.0_RC/ChangeLog
+===================================================================
+--- /branches/1.1.0_RC/ChangeLog (revision 4488)
++++ /branches/1.1.0_RC/ChangeLog (revision 4492)
+@@ -1,2 +1,6 @@
++Deluge 1.1.0_RC4 (In Development)
++ Core:
++  * Fix issue in get_tracker_host when the torrent has no tracker
++
+ Deluge 1.1.0_RC3 (05 January 2009)
+  Core:

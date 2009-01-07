@@ -7,13 +7,19 @@
 
 Name:		deluge
 Version:	1.1.0
-Release:	0.2.rc3%{?dist}
+Release:	0.3.rc3%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-1.1.0_RC3.tar.bz2
+
+## Fix issue in get_tracker_host when the torrent has no tracker; from
+## upstream SVN (changeset 4492 - will be in 1.1.0 RC4).
+## Fedora bug:   https://bugzilla.redhat.com/show_bug.cgi?id=479097
+## Upstream bug: http://dev.deluge-torrent.org/ticket/704
+Patch0: 	%{name}-fix-get_tracker_host-if-no-tracker.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
@@ -50,6 +56,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 %prep
 %setup -qn "%{name}-1.1.0_RC3"
+%patch0 -p3 -b .fix-get_tracker-host-if-no-tracker
 
 
 %build
@@ -133,7 +140,15 @@ fi
 
 
 %changelog
-* Thu Jan 06 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.0-0.2.rc3
+* Wed Jan 07 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.0-0.3.rc3
+- Add patch from upstream SVN to fix an error where torrents are not shown (or
+  possibly shown in "Error" states) due to a bad inet_aton call:
+  + fix-get_tracker-host-if-no-tracker.patch
+- Resolves: #479097 (No torrent shown in menu); thanks to Mamoru Tasaka for
+  the bug report.
+- Fix day of previous %%changelog entry.
+
+* Tue Jan 06 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.0-0.2.rc3
 - Update to new upstream release candidate (1.1.0 RC3)
 - Build against the system rb_libtorrent instead of using the in-tarball copy
   (requires rb_libtorrent 0.14+), and adjust dependencies accordingly. Drop
