@@ -7,7 +7,7 @@
 
 Name:		deluge
 Version:	1.1.0
-Release:	0.3.rc3%{?dist}
+Release:	0.4.rc3%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -76,7 +76,18 @@ desktop-file-install --vendor fedora			\
 	--delete-original				\
 	--remove-category=Application			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
-## TODO: The lang files should REEEAALLLY be in a standard place such as
+## Remove the country flags. This is a FEDORA-SPECIFIC change.
+## TODO: Perhaps instead of removing the flags entirely, we can replace that
+##       single column of pixbuf renderers with text renderers that show the
+##       country/locale code of the peer.
+## Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=479265
+pushd %{buildroot}%{python_sitelib}/%{name}
+	## FIXME: Now that we're not showing the flags and whatnot, do we
+	##        still need the GeoIP data (GeoIP.dat) too?
+	rm -rf data/pixmaps/flags/
+popd 
+
+## NOTE: The lang files should REEEAALLLY be in a standard place such as
 ##       /usr/share/locale or similar. It'd make things so much nicer for
 ##       the packaging. :O
 ## A bit of sed magic to mark the translation files with %%lang, taken from
@@ -140,6 +151,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.0-0.4.rc3
+- Do not package the country flags data.
+- Resolves: #479265 (country flags should not be used in Deluge)
+
 * Wed Jan 07 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.0-0.3.rc3
 - Add patch from upstream SVN to fix an error where torrents are not shown (or
   possibly shown in "Error" states) due to a bad inet_aton call:
