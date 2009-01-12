@@ -7,19 +7,13 @@
 
 Name:		deluge
 Version:	1.1.0
-Release:	0.4.rc3%{?dist}
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-1.1.0_RC3.tar.bz2
-
-## Fix issue in get_tracker_host when the torrent has no tracker; from
-## upstream SVN (changeset 4492 - will be in 1.1.0 RC4).
-## Fedora bug:   https://bugzilla.redhat.com/show_bug.cgi?id=479097
-## Upstream bug: http://dev.deluge-torrent.org/ticket/704
-Patch0: 	%{name}-fix-get_tracker_host-if-no-tracker.patch
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
@@ -55,8 +49,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %prep
-%setup -qn "%{name}-1.1.0_RC3"
-%patch0 -p3 -b .fix-get_tracker-host-if-no-tracker
+%setup -qn "%{name}-%{version}"
 
 
 %build
@@ -124,7 +117,7 @@ rm -rf %{buildroot}
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
 %doc ChangeLog
-%{python_sitelib}/%{name}-1.1.0_RC3-py?.?.egg-info/
+%{python_sitelib}/%{name}-%{version}-py?.?.egg-info/
 %{_bindir}/%{name}
 %{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
@@ -151,6 +144,11 @@ fi
 
 
 %changelog
+* Sun Jan 11 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.0-1
+- Update to new upstream release (1.1.0 Final - yay!)
+- Drop the get_tracker_host patch (fixed upstream):
+  - fix-get_tracker-host-if-no-tracker.patch
+  
 * Fri Jan 09 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.0-0.4.rc3
 - Do not package the country flags data.
 - Resolves: #479265 (country flags should not be used in Deluge)
