@@ -2,7 +2,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.0.7
+Version:	1.1.0
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -78,7 +78,18 @@ desktop-file-install --vendor fedora			\
 	--delete-original				\
 	--remove-category=Application			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
-## TODO: The lang files should REEEAALLLY be in a standard place such as
+## Remove the country flags. This is a FEDORA-SPECIFIC change.
+## TODO: Perhaps instead of removing the flags entirely, we can replace that
+##       single column of pixbuf renderers with text renderers that show the
+##       country/locale code of the peer.
+## Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=479265
+pushd %{buildroot}%{python_sitearch}/%{name}
+	## FIXME: Now that we're not showing the flags and whatnot, do we
+	##        still need the GeoIP data (GeoIP.dat) too?
+	rm -rf data/pixmaps/flags/
+popd 
+
+## NOTE: The lang files should REEEAALLLY be in a standard place such as
 ##       /usr/share/locale or similar. It'd make things so much nicer for
 ##       the packaging. :O
 ## A bit of sed magic to mark the translation files with %%lang, taken from
@@ -115,7 +126,7 @@ rm -rf %{buildroot}
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
 %doc ChangeLog
-%{python_sitearch}/%{name}-%{version}-py?.?.egg-info
+%{python_sitearch}/%{name}-%{version}-py?.?.egg-info/
 %{_bindir}/%{name}
 %{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
@@ -142,6 +153,10 @@ fi
 
 
 %changelog
+* Fri Jan 16 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.0-1
+- Update to new upstream release (1.1.0 Final - yay!)
+- Do not package the country flags data. (#479265)
+
 * Tue Dec 16 2008 Peter Gordon <peter@thecodergeek.com> - 1.0.7-1
 - Update to new upstream bug-fix release (1.0.7)
 - Remove CC-BY-SA license (the Tango WebUI images have been replaced by upstream).
