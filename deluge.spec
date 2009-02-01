@@ -6,7 +6,7 @@
 %define	min_rblibtorrent_ver	0.14.1
 
 Name:		deluge
-Version:	1.1.1
+Version:	1.1.2
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -144,6 +144,9 @@ fi
 
 
 %changelog
+* Sat Jan 31 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.2-1
+- Update to new upstream bug-fix release (1.1.2)
+
 * Sun Jan 25 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.1-1
 - Update to new upstream bug-fix release (1.1.1)
 
