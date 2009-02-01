@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	1.1.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -132,7 +132,7 @@ rm -rf %{buildroot}
 %{_datadir}/applications/fedora-%{name}.desktop
 %{_datadir}/pixmaps/%{name}.*
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-%{_datadir}/icons/scalable/apps/%{name}.svg
+%{_datadir}/icons/scalable/
 %{_mandir}/man?/%{name}*
 
 
@@ -153,6 +153,9 @@ fi
 
 
 %changelog
+* Sun Feb 01 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.2-2
+- Fix scalable icon directory ownership (#483443).
+
 * Sat Jan 31 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.2-1
 - Update to new upstream bug-fix release (1.1.2)
 
