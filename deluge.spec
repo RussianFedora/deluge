@@ -7,7 +7,7 @@
 
 Name:		deluge
 Version:	1.1.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -144,6 +144,9 @@ fi
 
 
 %changelog
+* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Sun Feb 15 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.3-1
 - Update to new upstream bug-fix release (1.1.3)
 
