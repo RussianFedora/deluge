@@ -6,8 +6,8 @@
 %define	min_rblibtorrent_ver	0.14.1
 
 Name:		deluge
-Version:	1.1.3
-Release:	2%{?dist}
+Version:	1.1.4
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -144,6 +144,9 @@ fi
 
 
 %changelog
+* Mon Mar 09 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.4-1
+- Update to new upstream bug-fix release (1.1.4)
+
 * Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
