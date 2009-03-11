@@ -7,13 +7,16 @@
 
 Name:		deluge
 Version:	1.1.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
+
+## The scalable icon needs to be installed to the proper place.
+Patch0: 	%{name}-scalable-icon-dir.diff
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
@@ -50,6 +53,7 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 %prep
 %setup -qn "%{name}-%{version}"
+%patch0 -p0 -b .fix-scalable-icon-dir
 
 
 %build
@@ -122,8 +126,7 @@ rm -rf %{buildroot}
 %{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
 %{_datadir}/pixmaps/%{name}.*
-%{_datadir}/icons/hicolor/*/apps/%{name}.png
-%{_datadir}/icons/scalable/
+%{_datadir}/icons/hicolor/*/apps/%{name}.*
 %{_mandir}/man?/%{name}*
 
 
@@ -144,6 +147,10 @@ fi
 
 
 %changelog
+* Tue Mar 10 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.4-2
+- Fix the installed location of the scalable (SVG) icon (#483443).
+  + scalable-icon-dir.diff
+
 * Mon Mar 09 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.4-1
 - Update to new upstream bug-fix release (1.1.4)
 
