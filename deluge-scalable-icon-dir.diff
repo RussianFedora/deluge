@@ -1,0 +1,12 @@
+diff -up ./setup.py.old ./setup.py
+--- ./setup.py.old	2009-03-10 16:50:52.000000000 -0700
++++ ./setup.py	2009-03-10 16:51:04.000000000 -0700
+@@ -328,7 +328,7 @@ cmdclass = {
+ 
+ # Data files to be installed to the system
+ _data_files = [
+-    ('share/icons/scalable/apps', ['deluge/data/icons/scalable/apps/deluge.svg']),
++    ('share/icons/hicolor/scalable/apps', ['deluge/data/icons/scalable/apps/deluge.svg']),
+     ('share/icons/hicolor/128x128/apps', ['deluge/data/icons/hicolor/128x128/apps/deluge.png']),
+     ('share/icons/hicolor/16x16/apps', ['deluge/data/icons/hicolor/16x16/apps/deluge.png']),
+     ('share/icons/hicolor/192x192/apps', ['deluge/data/icons/hicolor/192x192/apps/deluge.png']),
