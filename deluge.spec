@@ -6,8 +6,8 @@
 %define	min_rblibtorrent_ver	0.14.1
 
 Name:		deluge
-Version:	1.1.4
-Release:	2%{?dist}
+Version:	1.1.5
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv2+
@@ -57,9 +57,6 @@ even from behind a router with virtually zero configuration of port-forwarding.
 
 
 %build
-## FIXME: This should really use %%{?_smp_mflags} or similar for parallel
-## compilations; but the build system on this doesn't support such flags at
-## this time.
 CFLAGS="%{optflags}" %{__python} setup.py build
 
 
@@ -147,6 +144,12 @@ fi
 
 
 %changelog
+* Mon Mar 16 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.5-1
+- Update to new upstream bug-fix release (1.1.5)
+- Remove FIXME comment about parallel-compilation. We're not building the
+  in-tarball libtorrent copy anymore, so no compilation (other than the python
+  bytecode) happens and we no longer need to worry about this.
+
 * Tue Mar 10 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.4-2
 - Fix the installed location of the scalable (SVG) icon (#483443).
   + scalable-icon-dir.diff
