@@ -6,11 +6,11 @@
 %define	min_rblibtorrent_ver	0.14.1
 
 Name:		deluge
-Version:	1.1.5
+Version:	1.1.6
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
-License:	GPLv2+
+License:	GPLv3 with exceptions
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
@@ -21,10 +21,7 @@ Patch0: 	%{name}-scalable-icon-dir.diff
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 
-BuildRequires:	boost-devel
 BuildRequires:	desktop-file-utils
-BuildRequires:	libtool
-BuildRequires:	openssl-devel
 BuildRequires:	python-devel
 BuildRequires:	python-setuptools
 ## The build script checks for the libtorrent module and skips compiling the
@@ -144,6 +141,12 @@ fi
 
 
 %changelog
+* Mon Apr 06 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.6-1
+- Update to new upstream bug-fix release (1.1.6)
+- Fix GPL version, add OpenSSL exception to License.
+- Remove libtool, openssl-devel, and boost-devel BuildRequires (were only
+  necessary when building the in-tarball libtorrent copy).
+
 * Mon Mar 16 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.5-1
 - Update to new upstream bug-fix release (1.1.5)
 - Remove FIXME comment about parallel-compilation. We're not building the
