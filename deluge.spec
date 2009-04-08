@@ -2,11 +2,11 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.1.5
+Version:	1.1.6
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
-License:	GPLv2+
+License:	GPLv3 with exceptions
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
@@ -156,6 +156,10 @@ fi
 
 
 %changelog
+* Tue Apr 07 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.6-1
+- Update to new upstream bug-fix release (1.1.6)
+- Fix GPL version, add OpenSSL exception to License.
+
 * Thu Mar 26 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.5-1
 - Update to new upstream bug-fix release (1.1.5)
 
