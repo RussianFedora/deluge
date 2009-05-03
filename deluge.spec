@@ -3,10 +3,10 @@
 
 ## Since we're using a system copy of rb_libtorrent, we need to ensure that it
 ## is a very recent version for proper API matching.
-%define	min_rblibtorrent_ver	0.14.1
+%define	min_rblibtorrent_ver	0.14.3
 
 Name:		deluge
-Version:	1.1.6
+Version:	1.1.7
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -141,6 +141,9 @@ fi
 
 
 %changelog
+* Sat May 02 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.7-1
+- Update to new upstream bug-fix release (1.1.7).
+
 * Mon Apr 06 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.6-1
 - Update to new upstream bug-fix release (1.1.6)
 - Fix GPL version, add OpenSSL exception to License.
