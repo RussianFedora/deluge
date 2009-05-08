@@ -7,7 +7,7 @@
 
 Name:		deluge
 Version:	1.1.7
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
@@ -141,6 +141,9 @@ fi
 
 
 %changelog
+* Fri May 08 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.7-2
+- Rebuild for the Boost 1.39.0 update.
+
 * Sat May 02 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.7-1
 - Update to new upstream bug-fix release (1.1.7).
 
