@@ -6,8 +6,8 @@
 %define	min_rblibtorrent_ver	0.14.3
 
 Name:		deluge
-Version:	1.1.7
-Release:	2%{?dist}
+Version:	1.1.8
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
@@ -35,6 +35,7 @@ Requires:	dbus-x11
 Requires:	hicolor-icon-theme
 Requires:	pygtk2-libglade
 Requires:	pyOpenSSL
+Requires:	python-chardet
 Requires:	python-setuptools
 Requires:	pyxdg
 Requires:	rb_libtorrent-python >= %{min_rblibtorrent_ver}
@@ -46,6 +47,17 @@ environments such as GNOME and XFCE. It supports features such as DHT
 (Distributed Hash Tables), PEX (µTorrent-compatible Peer Exchange), and UPnP
 (Universal Plug-n-Play) that allow one to more easily share BitTorrent data
 even from behind a router with virtually zero configuration of port-forwarding.
+
+
+%package	flags
+Summary:	Country flags for peer location display in Deluge
+Group:		Applications/Internet
+License:	GPLv3
+Requires:	%{name} = %{version}-%{release}
+
+%description	flags
+The %{name}-flags package contains optional country flags which are used to
+display the location of peers in the "Peers" information tab.
 
 
 %prep
@@ -67,16 +79,6 @@ desktop-file-install --vendor fedora			\
 	--delete-original				\
 	--remove-category=Application			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
-## Remove the country flags. This is a FEDORA-SPECIFIC change.
-## TODO: Perhaps instead of removing the flags entirely, we can replace that
-##       single column of pixbuf renderers with text renderers that show the
-##       country/locale code of the peer.
-## Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=479265
-pushd %{buildroot}%{python_sitelib}/%{name}
-	## FIXME: Now that we're not showing the flags and whatnot, do we
-	##        still need the GeoIP data (GeoIP.dat) too?
-	rm -rf data/pixmaps/flags/
-popd 
 
 ## NOTE: The lang files should REEEAALLLY be in a standard place such as
 ##       /usr/share/locale or similar. It'd make things so much nicer for
@@ -95,14 +97,16 @@ pushd %{buildroot}
 			s:%lang(C) ::
 			/^$/d' \
 	> %{name}.filelist
+
 ## We've got the .mo files now; but we need the rest of the files in those
 ## dirs. We can't just glob in the %%files, as that would add duplicate
 ## entries for the .mo files which we've already marked with appropriate
 ## %%lang-fu. 
-	find ./%{python_sitelib}/deluge -not -iname '%{name}.mo' -type f \
-		| sed 's:^\./::' >> %{name}.filelist
-	find ./%{python_sitelib}/deluge -not -iname '%{name}.mo' -type d \
-		| sed 's:^\./:%%dir :' >> %{name}.filelist	
+	find ./%{python_sitelib}/%{name} -not -iname '%{name}.mo' -type f \
+		| grep -v 'pixmaps/flags' | sed 's:^\./::' >> %{name}.filelist
+	find ./%{python_sitelib}/%{name} -type d  | grep -v 'pixmaps/flags' \
+		| sed 's:^\./:%%dir :' >> %{name}.filelist
+
 ## Now we move that list back to our sources, so that '%%files -f' can find it
 ## properly.
 popd && mv %{buildroot}/%{name}.filelist .
@@ -114,7 +118,7 @@ rm -rf %{buildroot}
 
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
-%doc ChangeLog
+%doc ChangeLog LICENSE README
 %{python_sitelib}/%{name}-%{version}-py?.?.egg-info/
 %{_bindir}/%{name}
 %{_bindir}/%{name}d
@@ -122,6 +126,11 @@ rm -rf %{buildroot}
 %{_datadir}/pixmaps/%{name}.*
 %{_datadir}/icons/hicolor/*/apps/%{name}.*
 %{_mandir}/man?/%{name}*
+
+%files	flags
+%defattr(-,root,root,-)
+%doc LICENSE
+%{python_sitelib}/%{name}/data/pixmaps/flags/
 
 
 %post
@@ -141,6 +150,14 @@ fi
 
 
 %changelog
+* Wed May 27 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.8-1
+- Update to new upstream release (1.1.8) for bug-fixes and some translation
+  updates. Adds dependency on chardet for fixing lots of bugs with torrents
+  which are not encoded as UTF-8.
+- Add back the flags, in an optional -flags subpackage as per the new Flags
+  policy (Package_Maintainers_Flags_Policy on the wiki).
+- Add LICENSE and README to installed documentation.
+
 * Fri May 08 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.7-2
 - Rebuild for the Boost 1.39.0 update.
 
