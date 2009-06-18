@@ -1,12 +1,8 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
-## Since we're using a system copy of rb_libtorrent, we need to ensure that it
-## is a very recent version for proper API matching.
-%define	min_rblibtorrent_ver	0.14.3
-
 Name:		deluge
-Version:	1.1.8
+Version:	1.1.9
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -150,6 +146,12 @@ fi
 
 
 %changelog
+* Wed Jun 17 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.9-1
+- Update to new upstream bug-fix release (1.1.9).
+- Do not hard-code minimum rb_libtorrent version. (We're only building against
+  the system rb_libtorrent for Fedora 11+, which already has the necessary
+  version.)
+
 * Wed May 27 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.8-1
 - Update to new upstream release (1.1.8) for bug-fixes and some translation
   updates. Adds dependency on chardet for fixing lots of bugs with torrents
