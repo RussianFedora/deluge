@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	1.1.9
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
@@ -22,7 +22,7 @@ BuildRequires:	python-devel
 BuildRequires:	python-setuptools
 ## The build script checks for the libtorrent module and skips compiling the
 ## in-tarball one if this is found.
-BuildRequires:	rb_libtorrent-python >= %{min_rblibtorrent_ver}
+BuildRequires:	rb_libtorrent-python
 
 Requires:	/bin/sh
 Requires:	dbus-python
@@ -34,7 +34,7 @@ Requires:	pyOpenSSL
 Requires:	python-chardet
 Requires:	python-setuptools
 Requires:	pyxdg
-Requires:	rb_libtorrent-python >= %{min_rblibtorrent_ver}
+Requires:	rb_libtorrent-python
 
 %description
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
@@ -146,6 +146,10 @@ fi
 
 
 %changelog
+* Wed Jul 08 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.9-2
+- Fixed rb_libtorrent-python dependency, so as not to use the
+  %%min_rblibtorrent_ver macro any more (#510264).
+
 * Wed Jun 17 2009 Peter Gordon <peter@thecodergeek.com> - 1.1.9-1
 - Update to new upstream bug-fix release (1.1.9).
 - Do not hard-code minimum rb_libtorrent version. (We're only building against
