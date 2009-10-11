@@ -11,6 +11,7 @@ URL:		http://deluge-torrent.org/
 
 Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}_rc1.tar.bz2
 
+## The scalable icon needs to be installed to the proper place.
 Patch0: 	%{name}-scalable-icon-dir.diff
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
