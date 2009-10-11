@@ -2,16 +2,15 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.1.9
-Release:	3%{?dist}
+Version:	1.2.0
+Release:	0.1.rc1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}_rc1.tar.bz2
 
-## The scalable icon needs to be installed to the proper place.
 Patch0: 	%{name}-scalable-icon-dir.diff
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -20,21 +19,20 @@ BuildArch:	noarch
 BuildRequires:	desktop-file-utils
 BuildRequires:	python-devel
 BuildRequires:	python-setuptools
-## The build script checks for the libtorrent module and skips compiling the
-## in-tarball one if this is found.
-BuildRequires:	rb_libtorrent-python
 
-Requires:	/bin/sh
-Requires:	dbus-python
-Requires:	dbus-x11
+Requires:	gnome-python2-gnome
 ## Required for the proper ownership of icon dirs.
 Requires:	hicolor-icon-theme
-Requires:	pygtk2-libglade
+Requires:	notify-python
 Requires:	pyOpenSSL
+Requires:	pygtk2-libglade
 Requires:	python-chardet
 Requires:	python-setuptools
+Requires:	python-simplejson
+Requires:	python-twisted-web
 Requires:	pyxdg
 Requires:	rb_libtorrent-python
+
 
 %description
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
@@ -57,7 +55,7 @@ display the location of peers in the "Peers" information tab.
 
 
 %prep
-%setup -qn "%{name}-%{version}"
+%setup -qn "%{name}-%{version}_rc1"
 %patch0 -p0 -b .fix-scalable-icon-dir
 
 
@@ -115,8 +113,11 @@ rm -rf %{buildroot}
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
 %doc ChangeLog LICENSE README
-%{python_sitelib}/%{name}-%{version}-py?.?.egg-info/
+%{python_sitelib}/%{name}-%{version}_rc1_dev-py2.?.egg-info/
 %{_bindir}/%{name}
+%{_bindir}/%{name}-console
+%{_bindir}/%{name}-gtk
+%{_bindir}/%{name}-web
 %{_bindir}/%{name}d
 %{_datadir}/applications/fedora-%{name}.desktop
 %{_datadir}/pixmaps/%{name}.*
@@ -146,6 +147,10 @@ fi
 
 
 %changelog
+* Sun Oct 11 2009 Peter Gordon <peter@thecodergeek.com> - 1.2.0-0.1.rc1
+- Update to new upstream release candidate (1.2.0 RC1)
+- Adds Twisted dependencies, and drops the D-Bus dependency.
+
 * Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.9-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
