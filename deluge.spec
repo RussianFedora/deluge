@@ -3,13 +3,13 @@
 
 Name:		deluge
 Version:	1.2.0
-Release:	0.1.rc1%{?dist}
+Release:	0.2.rc3%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}_rc1.tar.bz2
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}_rc3.tar.bz2
 
 ## The scalable icon needs to be installed to the proper place.
 Patch0: 	%{name}-scalable-icon-dir.diff
@@ -56,7 +56,7 @@ display the location of peers in the "Peers" information tab.
 
 
 %prep
-%setup -qn "%{name}-%{version}_rc1"
+%setup -qn "%{name}-%{version}_rc3"
 %patch0 -p0 -b .fix-scalable-icon-dir
 
 
@@ -114,7 +114,7 @@ rm -rf %{buildroot}
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
 %doc ChangeLog LICENSE README
-%{python_sitelib}/%{name}-%{version}_rc1_dev-py2.?.egg-info/
+%{python_sitelib}/%{name}-%{version}_rc3-py2.?.egg-info/
 %{_bindir}/%{name}
 %{_bindir}/%{name}-console
 %{_bindir}/%{name}-gtk
@@ -148,6 +148,9 @@ fi
 
 
 %changelog
+* Wed Nov 04 2009 Peter Gordon <peter@thecodergeek.com> - 1.2.0-0.2.rc3
+- Update to new upstream release candidate (1.2.0 RC3)
+
 * Sun Oct 11 2009 Peter Gordon <peter@thecodergeek.com> - 1.2.0-0.1.rc1
 - Update to new upstream release candidate (1.2.0 RC1)
 - Adds Twisted dependencies, and drops the D-Bus dependency.
