@@ -2,7 +2,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.2.0
+Version:	1.2.1
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -28,12 +28,12 @@ Requires:	notify-python
 Requires:	pyOpenSSL
 Requires:	pygtk2-libglade
 Requires:	python-chardet
+Requires:	python-mako
 Requires:	python-setuptools
 Requires:	python-simplejson
 Requires:	python-twisted-web
 Requires:	pyxdg
 Requires:	rb_libtorrent-python
-
 
 %description
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
@@ -148,6 +148,11 @@ fi
 
 
 %changelog
+* Sat Feb 27 2010 Peter Gordon <peter@thecodergeek.com> - 1.2.1-1
+- Update to new upstream bug-fix release (1.2.1)
+- Add python-mako dependency to fix WebUI startup crash. 
+- Resolves: #568845 (missing dependency to python-mako)
+
 * Sat Jan 16 2010 Peter Gordon <peter@thecodergeek.com> - 1.2.0-1
 - Update to new upstream final release (1.2.0)
 
