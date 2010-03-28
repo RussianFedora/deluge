@@ -2,7 +2,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.2.1
+Version:	1.2.3
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -148,6 +148,9 @@ fi
 
 
 %changelog
+* Sun Mar 28 2010 Peter Gordon <peter@thecodergeek.com> - 1.2.3-1
+- Update to new upstream bug-fix release (1.2.3).
+
 * Sat Feb 27 2010 Peter Gordon <peter@thecodergeek.com> - 1.2.1-1
 - Update to new upstream bug-fix release (1.2.1)
 - Add python-mako dependency to fix WebUI startup crash. 
