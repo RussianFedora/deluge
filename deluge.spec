@@ -1,20 +1,17 @@
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-
 Name:		deluge
 Version:	1.2.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
-URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.bz2
+URL:	http://deluge-torrent.org/
+
+Source0:	http://download.deluge-torrent.org/source/%{name}-%{version}.tar.lzma
 
 ## The scalable icon needs to be installed to the proper place.
-Patch0: 	%{name}-scalable-icon-dir.diff
+Patch0:		%{name}-scalable-icon-dir.diff
 
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 
 BuildRequires:	desktop-file-utils
@@ -66,7 +63,6 @@ CFLAGS="%{optflags}" %{__python} setup.py build
 
 
 %install
-rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 desktop-file-install --vendor fedora			\
 	--dir %{buildroot}%{_datadir}/applications	\
@@ -77,8 +73,8 @@ desktop-file-install --vendor fedora			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
 
 ## NOTE: The lang files should REEEAALLLY be in a standard place such as
-##       /usr/share/locale or similar. It'd make things so much nicer for
-##       the packaging. :O
+## /usr/share/locale or similar. It'd make things so much nicer for
+## the packaging. :O
 ## A bit of sed magic to mark the translation files with %%lang, taken from
 ## find-lang.sh (part of the rpm-build package) and tweaked somewhat. We
 ## cannot (unfortunately) call find-lang directly since it's not on a
@@ -106,11 +102,6 @@ pushd %{buildroot}
 ## Now we move that list back to our sources, so that '%%files -f' can find it
 ## properly.
 popd && mv %{buildroot}/%{name}.filelist .
-
-
-%clean
-rm -rf %{buildroot}
-
 
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
@@ -149,6 +140,12 @@ fi
 
 
 %changelog
+* Fri May 28 2010 Rahul Sundaram <sundaram@fedoraproject.org> - 1.2.3-2
+- Rebuild for new rb_libtorrent which is needed to fix E-V-R
+- Fix Source URL
+- Use best source (LZMA)
+- Update spec to match current guidelines
+
 * Sun Mar 28 2010 Peter Gordon <peter@thecodergeek.com> - 1.2.3-1
 - Update to new upstream bug-fix release (1.2.3).
 - Add python-mako dependency to fix WebUI startup crash. 
