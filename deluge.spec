@@ -3,7 +3,7 @@
 
 Name:		deluge
 Version:	1.3.0
-Release:	0.1.rc1%{?dist}
+Release:	0.2.rc1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
@@ -148,6 +148,9 @@ fi
 
 
 %changelog
+* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 1.3.0-0.2.rc1
+- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
+
 * Tue Jul 20 2010 Peter Gordon <peter@thecodergeek.com> - 1.3.0-0.1.rc1
 - Update to new upstream release candidate (1.3.0 RC1)
 
