@@ -1,16 +1,18 @@
 Name:		deluge
-Version:	1.2.3
-Release:	2%{?dist}
+Version:	1.3.0
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
 
-URL:	http://deluge-torrent.org/
+URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/source/%{name}-%{version}.tar.lzma
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.lzma
 
 ## The scalable icon needs to be installed to the proper place.
-Patch0:		%{name}-scalable-icon-dir.diff
+Patch0: 	%{name}-scalable-icon-dir.diff
+## Add P2P to the Categories in the .desktop file (#615984).
+Patch1: 	%{name}-desktop-categories-p2p.diff
 
 BuildArch:	noarch
 
@@ -56,6 +58,7 @@ display the location of peers in the "Peers" information tab.
 %prep
 %setup -q
 %patch0 -p0 -b .fix-scalable-icon-dir
+%patch1 -p0 -b .desktop-categories-add-p2p
 
 
 %build
@@ -73,8 +76,8 @@ desktop-file-install --vendor fedora			\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
 
 ## NOTE: The lang files should REEEAALLLY be in a standard place such as
-## /usr/share/locale or similar. It'd make things so much nicer for
-## the packaging. :O
+##       /usr/share/locale or similar. It'd make things so much nicer for
+##       the packaging. :O
 ## A bit of sed magic to mark the translation files with %%lang, taken from
 ## find-lang.sh (part of the rpm-build package) and tweaked somewhat. We
 ## cannot (unfortunately) call find-lang directly since it's not on a
@@ -95,7 +98,7 @@ pushd %{buildroot}
 ## entries for the .mo files which we've already marked with appropriate
 ## %%lang-fu. 
 	find ./%{python_sitelib}/%{name} -not -iname '%{name}.mo' -type f \
-		| grep -v 'pixmaps/flags' | sed 's:^\./::' >> %{name}.filelist
+		| grep -v 'pixmaps/flags' | sed -e 's:^\./::' -e 's| |*|g' >> %{name}.filelist
 	find ./%{python_sitelib}/%{name} -type d  | grep -v 'pixmaps/flags' \
 		| sed 's:^\./:%%dir :' >> %{name}.filelist
 
@@ -140,6 +143,12 @@ fi
 
 
 %changelog
+* Wed Oct 13 2010 Peter Gordon <peter@thecodergeek.com> - 1.3.0-1
+- Update to new upstream release (1.3.0).
+- Add P2P to the .desktop file Categories list.
+  + desktop-categories-p2p.diff
+- Resolves: #615984 (.desktop menu entry has wrong/missing categories)
+
 * Fri May 28 2010 Rahul Sundaram <sundaram@fedoraproject.org> - 1.2.3-2
 - Rebuild for new rb_libtorrent which is needed to fix E-V-R
 - Fix Source URL
