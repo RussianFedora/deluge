@@ -3,16 +3,18 @@
 
 Name:		deluge
 Version:	1.3.0
-Release:	0.3.rc1%{?dist}
+Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
 URL:		http://deluge-torrent.org/           
 
-Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}_rc1.tar.lzma
+Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.lzma
 
 ## The scalable icon needs to be installed to the proper place.
 Patch0: 	%{name}-scalable-icon-dir.diff
+## Add P2P to the Categories in the .desktop file (#615984).
+Patch1: 	%{name}-desktop-categories-p2p.diff
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
@@ -56,9 +58,9 @@ display the location of peers in the "Peers" information tab.
 
 
 %prep
-%setup -qn "%{name}-%{version}_rc1"
+%setup -qn "%{name}-%{version}"
 %patch0 -p0 -b .fix-scalable-icon-dir
-
+%patch1 -p0 -b .desktop-categories-add-p2p
 
 %build
 CFLAGS="%{optflags}" %{__python} setup.py build
@@ -114,7 +116,7 @@ rm -rf %{buildroot}
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
 %doc ChangeLog LICENSE README
-%{python_sitelib}/%{name}-%{version}_rc1-py2.?.egg-info/
+%{python_sitelib}/%{name}-%{version}-py2.?.egg-info/
 %{_bindir}/%{name}
 %{_bindir}/%{name}-console
 %{_bindir}/%{name}-gtk
@@ -148,6 +150,11 @@ fi
 
 
 %changelog
+* Wed Oct 13 2010 Peter Gordon <peter@thecodergeek.com> - 1.3.0-1
+- Update to new upstream release (1.3.0).
+- Add P2P to the .desktop file Categories list.
+- Resolves: #615984 (.desktop menu entry has wrong/missing categories)
+
 * Tue Jul 27 2010 Bill Nottingham <notting@redhat.com> - 1.3.0-0.3.rc1
 - Rebuilt for boost-1.44
 
