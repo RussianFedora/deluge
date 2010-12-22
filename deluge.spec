@@ -1,12 +1,10 @@
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-
 Name:		deluge
-Version:	1.3.0
+Version:	1.3.1
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
 License:	GPLv3 with exceptions
+
 URL:		http://deluge-torrent.org/           
 
 Source0:	http://download.deluge-torrent.org/source/%{version}/%{name}-%{version}.tar.lzma
@@ -16,7 +14,6 @@ Patch0: 	%{name}-scalable-icon-dir.diff
 ## Add P2P to the Categories in the .desktop file (#615984).
 Patch1: 	%{name}-desktop-categories-p2p.diff
 
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 
 BuildRequires:	desktop-file-utils
@@ -36,6 +33,7 @@ Requires:	python-simplejson
 Requires:	python-twisted-web
 Requires:	pyxdg
 Requires:	rb_libtorrent-python
+
 
 %description
 Deluge is a new BitTorrent client, created using Python and GTK+. It is
@@ -58,16 +56,16 @@ display the location of peers in the "Peers" information tab.
 
 
 %prep
-%setup -qn "%{name}-%{version}"
+%setup -q
 %patch0 -p0 -b .fix-scalable-icon-dir
 %patch1 -p0 -b .desktop-categories-add-p2p
+
 
 %build
 CFLAGS="%{optflags}" %{__python} setup.py build
 
 
 %install
-rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 desktop-file-install --vendor fedora			\
 	--dir %{buildroot}%{_datadir}/applications	\
@@ -108,11 +106,6 @@ pushd %{buildroot}
 ## properly.
 popd && mv %{buildroot}/%{name}.filelist .
 
-
-%clean
-rm -rf %{buildroot}
-
-
 %files -f %{name}.filelist
 %defattr(-,root,root,-)
 %doc ChangeLog LICENSE README
@@ -150,9 +143,17 @@ fi
 
 
 %changelog
+* Tue Dec 21 2010 Peter Gordon <peter@thecodergeek.com> - 1.3.1
+- Update to new upstream bug-fix release (1.3.1).
+- Resolves: #659953 (Deluge hangs on exit)
+- Resolves: #658470 (Deluge package update)
+- Sync changes from F-13 for current spec file guidelines.
+- Fix previous %%changelog entry to include patch file name.
+
 * Wed Oct 13 2010 Peter Gordon <peter@thecodergeek.com> - 1.3.0-1
 - Update to new upstream release (1.3.0).
 - Add P2P to the .desktop file Categories list.
+  + desktop-categories-p2p.diff
 - Resolves: #615984 (.desktop menu entry has wrong/missing categories)
 
 * Tue Jul 27 2010 Bill Nottingham <notting@redhat.com> - 1.3.0-0.3.rc1
