@@ -2,7 +2,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:		deluge
-Version:	1.3.0
+Version:	1.3.1
 Release:	1%{?dist}
 Summary:	A GTK+ BitTorrent client with support for DHT, UPnP, and PEX
 Group:		Applications/Internet
@@ -61,6 +61,7 @@ display the location of peers in the "Peers" information tab.
 %setup -qn "%{name}-%{version}"
 %patch0 -p0 -b .fix-scalable-icon-dir
 %patch1 -p0 -b .desktop-categories-add-p2p
+
 
 %build
 CFLAGS="%{optflags}" %{__python} setup.py build
@@ -150,6 +151,9 @@ fi
 
 
 %changelog
+* Mon Nov  1 2010 Arkady L. Shane <ashejn@yandex-team.ru> - 1.3.1-1
+- update to 1.3.1
+
 * Wed Oct 13 2010 Peter Gordon <peter@thecodergeek.com> - 1.3.0-1
 - Update to new upstream release (1.3.0).
 - Add P2P to the .desktop file Categories list.
