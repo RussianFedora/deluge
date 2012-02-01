@@ -1,0 +1,8 @@
+--- deluge/_libtorrent.py-orig	2011-06-26 21:37:51.774133803 +0000
++++ deluge/_libtorrent.py	2011-06-26 21:38:02.907107808 +0000
+@@ -57,4 +57,4 @@
+     check_version(lt)
+ except ImportError:
+     import libtorrent as lt
+-    check_version(lt)
++#    check_version(lt)

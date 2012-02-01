@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+# Startup script for deluged
+#
+# chkconfig: - 86 14
+# description: deluged is the Deluge bit torrent daemon. It manages torrents
+# processname: deluged
+# pidfile: /var/run/deluged.pid
+# config: 
+
+# Source function library.
+. /etc/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+[ "${NETWORKING}" = "no" ] && exit 0
+
+prog=deluged
+prog2=deluge
+lockfile=/var/lock/subsys/deluged
+lockfile2=/var/lock/subsys/deluge
+
+start() {
+  echo -n $"Starting deluged service: "
+  daemon --user deluge "$prog $OPTIONS"
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && touch $lockfile
+
+  echo -n $"Starting deluge web ui: "
+  daemon --user deluge "$prog2 --ui web >/dev/null 2>&1 &"
+  RETVAL=$(($RETVAL|$?))
+  echo
+  [ $RETVAL -eq 0 ] && touch $lockfile2
+
+  return $RETVAL
+}
+
+stop() {
+  echo -n $"Shutting down deluged service: "
+  killproc $prog
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && rm -f $lockfile
+
+  echo -n $"Shutting down deluge web ui: "
+  killproc $prog2
+  RETVAL2=$?
+  echo
+  [ $RETVAL2 -eq 0 ] && rm -f $lockfile2
+
+  return $(($RETVAL|$RETVAL2))
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        status $prog
+        status $prog2
+	;;
+  restart)
+	stop
+	start
+	;;
+  reload)
+	exit 3
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|status|restart|reload}"
+	exit 1
+esac
